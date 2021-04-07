@@ -1,0 +1,17 @@
+<form action="/courses" method="get">
+    <input type="text" name="petName" placeholder="Busque seu pet pelo nome">
+    <button type="submit">Buscar Pets</button>
+</form>
+
+{{#if pets}}
+    {{#each pets}}
+        <div>
+            <a href="/pets/{{this._id}}">
+                <h3>{{this.name}}</h3>
+                <img src={{this.image}} alt="{{this.name}} photo">
+            </a>
+        </div>
+    {{/each}}
+{{else}}
+    <h1>Nenhum pet encontrado. Por favor, refine sua busca ou cadastre um novo pet.</h1>
+{{/if}}

@@ -1,0 +1,8 @@
+form {
+  margin: 3vh 25vw;
+}
+
+.warning {
+  display: block;
+  color: red;
+}
