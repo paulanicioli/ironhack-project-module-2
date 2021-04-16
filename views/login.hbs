@@ -1,17 +1,17 @@
-<h1>Bem vindo ao Iron Pets! Faça seu login e aproveite nossos incríveis serviços</h1>
+<h1>Bem vindo a escola do Futuro! Faça seu login</h1>
 
 <form action="/login" method="post">
 <div>
     <input type="email" name="userEmail" placeholder="Digite seu email">
-    {{#if userEmailError}}
-        <span>{{userEmailError}}</span>
-    {{/if}}
 </div>
 <div>
     <input type="password" name="userPassword" placeholder="Digite sua senha">
-    {{#if userPasswordError}}
-        <span>{{userPasswordError}}</span>
+    
+</div>
+<div>
+    {{#if loginError}}
+        <span class="text-danger">{{loginError}}</span>
     {{/if}}
 </div>
-<button type="submit">Efetuar login</button>
+<button type="submit" class="btn btn-primary">Efetuar login</button>
 </form>

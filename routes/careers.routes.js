@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const router = express();
 
-const Course = require('../models/Course');
+const Career = require('../models/Career');
 
 const User = require('../models/User');
 
@@ -13,12 +13,11 @@ const fileUploader = require('../config/cloudinary.config');
 
 router.get('/', (req, res) => {
   if (req.session.currentUser.role === 'student') {
-    const userGrade = req.session.currentUser.grade;
-    Course.find({ grade: userGrade })
+    Career.find()
       .sort({ name: 1 })
-      .then((courses) => {
-        res.render('./courses/courses', {
-          courses,
+      .then((careers) => {
+        res.render('./careers/careers', {
+          careers,
           currentUser: req.session.currentUser,
         });
       })
@@ -29,12 +28,12 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { courseName } = req.body;
-  Course.find({ name: new RegExp(courseName, 'i') })
+  const { careerName } = req.body;
+  Career.find({ name: new RegExp(careerName, 'i') })
     .sort({ name: 1 })
-    .then((courses) => {
-      res.render('./courses/courses', {
-        courses,
+    .then((careers) => {
+      res.render('./careers/careers', {
+        careers,
         currentUser: req.session.currentUser,
       });
     })
@@ -44,29 +43,28 @@ router.post('/', (req, res) => {
 });
 
 router.get('/new', (req, res) => {
-  res.render('newCourse', { currentUser: req.session.currentUser });
+  res.render('newCareer', { currentUser: req.session.currentUser });
 });
 
-router.post('/new', fileUploader.single('courseImage'), (req, res) => {
-  const { courseName, courseDescription, courseGrade } = req.body;
-  const newCourse = {
-    name: courseName,
+router.post('/new', fileUploader.single('careerImage'), (req, res) => {
+  const { careerName, careerDescription } = req.body;
+  const newCareer = {
+    name: careerName,
     image: req.file.path,
-    grade: courseGrade,
-    description: courseDescription,
+    description: careerDescription,
     creator: req.session.currentUser._id,
   };
-  Course.create(newCourse)
+  Career.create(newCareer)
     .then(() => {
-      res.redirect('/courses');
+      res.redirect('/careers');
     })
     .catch((error) => console.log(error));
 });
 
-router.get('/:courseId', (req, res) => {
-  const { courseId } = req.params;
+router.get('/:careerId', (req, res) => {
+  const { careerId } = req.params;
 
-  Course.findOne({ _id: courseId, owner: req.session.currentUser._id })
+  Career.findOne({ _id: careerId, owner: req.session.currentUser._id })
     .populate('owner')
     .then((courseFromDatabase) => {
       const mongoDbObject = courseFromDatabase.toJSON();

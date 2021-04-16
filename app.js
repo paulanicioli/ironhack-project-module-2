@@ -4,6 +4,7 @@ const hbs = require('hbs');
 
 const homeRoutes = require('./routes/home.routes');
 const coursesRoutes = require('./routes/courses.routes');
+const careerRoutes = require('./routes/careers.routes');
 const authRoutes = require('./routes/auth.routes');
 
 const cookieParser = require('cookie-parser');
@@ -42,6 +43,8 @@ app.use((req, res, next) => {
 // ROTAS PROTEGIDAS
 
 app.use('/courses', coursesRoutes);
+
+app.use('/careers', careerRoutes);
 
 // catch 404 and render a not-found.hbs template
 app.use((req, res, next) => {

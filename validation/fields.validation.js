@@ -1,4 +1,4 @@
-const nameValidation = (nameField) => {
+const firstNameValidation = (nameField) => {
   const errors = [];
 
   if (typeof nameField !== 'string') {
@@ -19,7 +19,33 @@ const nameValidation = (nameField) => {
   }
 
   if (nameField.replace(/[A-Za-z]/g, '').trim().length !== 0) {
-    // para verificar se no nome contém caracteres que não são letras
+    errors.push('Somente letras são aceitas');
+  }
+
+  return errors;
+};
+
+const lastNameValidation = (nameField) => {
+  const errors = [];
+
+  if (typeof nameField !== 'string') {
+    errors.push('Nome precisa ser um texto');
+    return errors;
+  }
+
+  if (nameField.trim().length === 0) {
+    errors.push('Campo não pode ser vazio');
+  }
+
+  if (nameField.trim().length < 3) {
+    errors.push('Mínimo de 3 caracteres');
+  }
+
+  if (nameField.trim().length > 50) {
+    errors.push('Máximo de 50 caracteres');
+  }
+
+  if (nameField.replace(/[A-Za-z]/g, '').trim().length !== 0) {
     errors.push('Somente letras são aceitas');
   }
 
@@ -120,7 +146,8 @@ const emailValidation = (emailField) => {
 };
 
 module.exports = {
-  nameValidation,
+  firstNameValidation,
+  lastNameValidation,
   passwordValidation,
   imageValidation,
   dateValidation,

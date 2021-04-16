@@ -7,6 +7,12 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('Conectado com o banco de dados'));
+  .then(() => console.log('Conectado com o banco de dados'))
+  .catch((error) => {
+    console.log(
+      'There has been an error trying to connect to the database ===> ',
+      error
+    );
+  });
 
 module.exports;

@@ -1,8 +1,24 @@
 form {
-  margin: 3vh 25vw;
+  margin: 3vh 20vw;
 }
 
 .warning {
   display: block;
   color: red;
+}
+
+.item-img {
+  max-width: 100%;
+  height: auto;
+}
+
+.content-card {
+  margin: 10px 0;
+}
+
+.item-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
 }

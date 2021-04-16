@@ -1,16 +1,22 @@
 const {
-  nameValidation,
+  firstNameValidation,
+  lastNameValidation,
   passwordValidation,
   emailValidation,
   dateValidation,
 } = require('./fields.validation');
 
-const validateSignup = (name, email, password, birthDate) => {
+const validateSignup = (firstName, lastName, email, password) => {
   const errorsObj = {};
 
-  const userNameErrors = nameValidation(name);
-  if (userNameErrors.length > 0) {
-    errorsObj.userNameErrors = userNameErrors;
+  const userFirstNameErrors = firstNameValidation(firstName);
+  if (userFirstNameErrors.length > 0) {
+    errorsObj.userFirstNameErrors = userFirstNameErrors;
+  }
+
+  const userLastNameErrors = lastNameValidation(lastName);
+  if (userLastNameErrors.length > 0) {
+    errorsObj.userLastNameErrors = userLastNameErrors;
   }
 
   const userEmailErrors = emailValidation(email);
@@ -22,15 +28,14 @@ const validateSignup = (name, email, password, birthDate) => {
   if (userPasswordErrors.length > 0) {
     errorsObj.userPasswordErrors = userPasswordErrors;
   }
-
-  const userBirthDateErrors = dateValidation(birthDate);
-  if (userBirthDateErrors.length > 0) {
-    errorsObj.userBirthDateErrors = userBirthDateErrors;
-  }
-
   return errorsObj;
 };
 
 module.exports = {
   validateSignup,
 };
+
+// const userBirthDateErrors = dateValidation(birthDate);
+//   if (userBirthDateErrors.length > 0) {
+//     errorsObj.userBirthDateErrors = userBirthDateErrors;
+//   }

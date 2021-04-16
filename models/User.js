@@ -20,6 +20,7 @@ const userSchema = new Schema(
     grades: { type: [Schema.Types.Mixed] },
     careers: { type: [Schema.Types.ObjectId], ref: 'Career' },
     children: { type: [Schema.Types.ObjectId], ref: 'User' },
+    creator: { type: Schema.Types.ObjectId, ref: 'User' },
   },
   {
     timestamps: true,

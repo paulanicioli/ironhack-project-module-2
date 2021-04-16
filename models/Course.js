@@ -6,10 +6,10 @@ const courseSchema = new Schema(
     description: { type: String, required: true },
     grade: { type: String, enum: ['1EM', '2EM', '3EM'] },
     image: { type: String },
-    birthDate: { type: Date },
     active: { type: Boolean, default: true },
     students: { type: [Schema.Types.ObjectId], ref: 'Student' },
     teacher: { type: Schema.Types.ObjectId, ref: 'Teacher' },
+    creator: { type: Schema.Types.ObjectId, ref: 'User' },
   },
   {
     timestamps: true,

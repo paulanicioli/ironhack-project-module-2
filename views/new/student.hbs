@@ -1,0 +1,73 @@
+<h1>Crie uma nova Conta Aluno:</h1>
+
+<form action="/new/student" method="post">
+  <div id="newUserForm">
+    <div class="row g-3">
+      <div class="col-md-12">
+        {{#if uniquenessError}}
+          <span class="text-danger">{{uniquenessError}}</span>
+        {{/if}}
+      </div>
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Nome" name="newUserFirstName">
+      </div>
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Sobrenome" name="newUserLastName">
+      </div>
+      <div class="col-md-6">
+        {{!-- {{#if validationErrors.firstNameErrors}}
+          <span class="text-danger">{{validationErrors.firstNameErrors.0}}</span>
+        {{/if}} --}}
+      </div>
+      <div class="col-md-6">
+        {{!-- {{#if validationErrors.lastNameErrors}}
+          <span class="text-danger">{{validationErrors.lastNameErrors.0}}</span>
+        {{/if}} --}}
+      </div>
+      <div class="col-md-6">
+        <input type="email" class="form-control" placeholder="Email" name="newUserEmail">
+      </div>
+      <div class="col-md-6">
+        <input type="password" class="form-control" placeholder="Senha" name="newUserPassword">
+      </div>
+      <div class="col-md-6">
+        {{!-- {{#if validationErrors.emailErrors}}
+          <span class="text-danger">{{validationErrors.emailErrors.0}}</span>
+        {{/if}} --}}
+      </div>
+      <div class="col-md-6">
+        {{!-- {{#if validationErrors.passwordErrors}}
+          <span class="text-danger">{{validationErrors.passwordErrors.0}}</span>
+        {{/if}} --}}
+      </div>
+      <div class="mb-3" id="newStudentGradeInput">
+        <label for="newUserGrade" class="form-label">Série que o aluno cursa atualmente:</label>
+        <select class="form-select" name="newUserGrade">
+          <option selected value="1EM">1º ano do Ensino Médio</option>
+          <option value="2EM">2º ano do Ensino Médio</option>
+          <option value="3EM">3º ano do Ensino Médio</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Salvar e enviar credenciais por email</button>
+</form>
+
+
+{{!-- Completar signup:
+
+
+ <div class="mb-3">
+    <label for="userProfilePicture" class="form-label">Escolha sua foto de perfil:</label>
+    <input type="file" class="form-control" id="userProfilePicture">
+    </div>
+  <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="userNewsletterOptIn">
+    <label class="form-check-label" for="userNewsletterOptIn">Quero receber a newsletter semanal da Escola do Futuro.</label>
+  </div>
+  <div class="mb-3">
+    <label for="userBirthDate" class="form-label">Data de nascimento:</label>
+    <input type="date" class="form-control" id="userLastName">
+    </div>
+
+ --}}

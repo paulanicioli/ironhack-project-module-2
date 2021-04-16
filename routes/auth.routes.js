@@ -8,40 +8,48 @@ const bcrypt = require('bcrypt');
 
 const { validateSignup } = require('../validation/validations');
 
-router.get('/new', (req, res) => {
-  res.render('newUser');
+router.get('/new/student', (req, res) => {
+  res.render('./new/student', { validationErrors: {} });
 });
 
-router.post('/new', async (req, res) => {
-  const { userName, userEmail, userPassword, userBirthDate } = req.body;
+router.post('/new/student', async (req, res) => {
+  const {
+    newUserFirstName,
+    newUserLastName,
+    newUserEmail,
+    newUserPassword,
+    newUserGrade,
+  } = req.body;
   const validationErrors = validateSignup(
-    userName,
-    userEmail,
-    userPassword,
-    userBirthDate
+    newUserFirstName,
+    newUserLastName,
+    newUserEmail,
+    newUserPassword
   );
 
   if (Object.keys(validationErrors).length > 0) {
-    return res.render('signup', validationErrors);
+    return res.render('./new/student', validationErrors);
   }
 
   try {
-    const userFromDb = await User.findOne({ email: userEmail });
+    const userFromDb = await User.findOne({ email: newUserEmail });
     if (userFromDb) {
-      return res.render('signup', {
-        userNameError: 'Este usuário já está cadastrado!',
+      return res.render('./new/student', {
+        uniquenessError: 'Erro! Este usuário já está cadastrado!',
       });
     }
 
     const saltRounds = 10;
     const salt = bcrypt.genSaltSync(saltRounds);
-    const encryptedPassword = bcrypt.hashSync(userPassword, salt);
+    const encryptedPassword = bcrypt.hashSync(newUserPassword, salt);
 
     await User.create({
-      name: userName,
-      email: userEmail,
+      firstName: newUserFirstName,
+      lastName: newUserLastName,
+      email: newUserEmail,
       password: encryptedPassword,
-      birthDate: new Date(userBirthDate),
+      grade: newUserGrade,
+      role: 'student',
     });
     res.redirect('/login');
   } catch (error) {
@@ -63,8 +71,7 @@ router.post('/login', async (req, res) => {
     if (!userFromDb) {
       console.log('Could not find user in db');
       return res.render('login', {
-        userEmailError: 'Usuário ou senha incorretos',
-        userPasswordError: 'Usuário ou senha incorretos',
+        loginError: 'Usuário ou senha incorretos',
       });
     }
     const isPasswordValid = bcrypt.compareSync(
@@ -74,15 +81,25 @@ router.post('/login', async (req, res) => {
 
     if (!isPasswordValid) {
       return res.render('login', {
-        userEmailError: 'Usuário ou senha incorretos',
-        userPasswordError: 'Usuário ou senha incorretos',
+        loginError: 'Usuário ou senha incorretos',
       });
     }
 
     // Iniciar uma sessão para este usuário
     req.session.currentUser = userFromDb;
 
-    res.redirect('/courses');
+    // Redirecionar para diferentes páginas dependendo do tipo de usuário
+
+    switch (userFromDb.role) {
+      case 'teacher':
+        res.redirect('/students/');
+        break;
+      case 'parent':
+        res.redirect('/students/');
+        break;
+      default:
+        res.redirect('/courses/');
+    }
   } catch (error) {
     console.log('Error in the login route ===> ', error);
   }

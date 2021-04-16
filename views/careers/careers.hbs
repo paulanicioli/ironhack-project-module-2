@@ -1,24 +1,24 @@
-<form action="/courses" method="post">
+<form action="/careers" method="post">
     <div class="input-group mb-3">
-        <input type="text" class="form-control" name="courseName" placeholder="Digite a matéria que gostaria de encontrar">
-        <button type="submit" class="btn btn-primary">Buscar Matéria</button>
+        <input type="text" class="form-control" name="careerName" placeholder="Digite a carreira que gostaria de encontrar">
+        <button type="submit" class="btn btn-primary">Buscar Carreira</button>
     </div>
 </form>
 
 
-{{#if courses}}
+{{#if careers}}
 <div class="item-list">
-    {{#each courses}}
+    {{#each careers}}
         <div class="card content-card" style="width: 18rem;">
             <img src="{{this.image}}" class="card-img-top item-img" alt="...">
             <div class="card-body">
                 <h5 class="card-title">{{this.name}}</h5>
                 <p class="card-text">{{this.description}}</p>
-                <a href="/courses/{{this._id}}" class="btn btn-primary">Ver detalhes da matéria</a>
+                <a href="/courses/{{this._id}}" class="btn btn-primary">Ver detalhes da carreira</a>
             </div>
         </div>
     {{/each}}
 </div>
 {{else}}
-    <h1>Nenhum curso encontrado. Tente novamente.</h1>
+    <h1>Nenhuma carreira encontrado. Tente novamente.</h1>
 {{/if}}
