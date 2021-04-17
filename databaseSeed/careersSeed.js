@@ -38,11 +38,13 @@ const careersToAdd = [
 
 const mongoose = require('mongoose');
 require('../config/mongodb.config');
+require('dotenv').config();
 const Career = require('../models/Career');
 
 Career.create(careersToAdd)
   .then((careers) => {
     console.log('Careers have been added to the database');
+    mongoose.disconnect();
   })
   .catch((error) => {
     console.log(

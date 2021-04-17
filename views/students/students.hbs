@@ -1,0 +1,28 @@
+<h1>Alunos</h1>
+
+<a href="/new/student"><button class="btn btn-primary">Criar novo aluno</button></a>
+
+<form action="/students" method="post">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="studentName" placeholder="Nome do aluno que gostaria de encontrar">
+        <button type="submit" class="btn btn-primary">Buscar Aluno</button>
+    </div>
+</form>
+
+
+{{#if students}}
+<div class="item-list">
+    {{#each students}}
+        <div class="card content-card" style="width: 18rem;">
+            <img src="{{this.profilePicture}}" class="card-img-top item-img" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">{{this.firstName}} {{this.lastName}}</h5>
+                <p class="card-text">{{this.grade}}</p>
+                <a href="/students/{{this._id}}" class="btn btn-primary">Ver detalhes do aluno</a>
+            </div>
+        </div>
+    {{/each}}
+</div>
+{{else}}
+    <h1>Nenhum aluno encontrado. Tente novamente.</h1>
+{{/if}}

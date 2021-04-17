@@ -21,6 +21,7 @@ const userSchema = new Schema(
     careers: { type: [Schema.Types.ObjectId], ref: 'Career' },
     children: { type: [Schema.Types.ObjectId], ref: 'User' },
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
+    first_login: { type: Boolean, default: true },
   },
   {
     timestamps: true,

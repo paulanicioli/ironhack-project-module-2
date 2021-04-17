@@ -1,0 +1,55 @@
+<h1>Crie uma nova Conta Pai:</h1>
+
+<form action="/new/parent" method="post">
+  <div id="newUserForm">
+    <div class="row g-3">
+      <div class="col-md-12">
+        {{#if uniquenessError}}
+          <span class="text-danger">{{uniquenessError}}</span>
+        {{/if}}
+      </div>
+      {{#if studentId}}
+      <div class="d-none">
+        <input type="text" class="form-control" placeholder="Nome" name="newParentStudent" value={{studentId}}>
+      </div>
+      {{else}}
+      <div class="cold-md-12">
+        <input type="text" class="form-control" placeholder="Escolha o filho" name="newParentStudent">
+      </div>
+      {{/if}}
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Nome" name="newParentFirstName" value={{newParentFirstName}}>
+      </div>
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Sobrenome" name="newParentLastName" value={{newParentLastName}}>
+      </div>
+      <div class="col-md-6">
+        {{#if validationErrors.userFirstNameErrors}}
+          <span class="text-danger">{{validationErrors.userFirstNameErrors.[0]}}</span>
+        {{/if}}
+      </div>
+      <div class="col-md-6">
+        {{#if validationErrors.userLastNameErrors}}
+          <span class="text-danger">{{validationErrors.userLastNameErrors.[0]}}</span>
+        {{/if}}
+      </div>
+      <div class="col-md-6">
+        <input type="email" class="form-control" placeholder="Email" name="newParentEmail" value={{newParentmail}}>
+      </div>
+      <div class="col-md-6">
+        <input type="password" class="form-control" placeholder="Senha" name="newParentPassword">
+      </div>
+      <div class="col-md-6">
+        {{#if validationErrors.userEmailErrors}}
+          <span class="text-danger">{{validationErrors.userEmailErrors.[0]}}</span>
+        {{/if}}
+      </div>
+      <div class="col-md-6">
+        {{#if validationErrors.userPasswordErrors}}
+          <span class="text-danger">{{validationErrors.userPasswordErrors.[0]}}</span>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Salvar e enviar credenciais por email</button>
+</form>

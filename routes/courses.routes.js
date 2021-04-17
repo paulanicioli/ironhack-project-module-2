@@ -12,8 +12,8 @@ const User = require('../models/User');
 const fileUploader = require('../config/cloudinary.config');
 
 router.get('/', (req, res) => {
+  const userGrade = req.session.currentUser.grade;
   if (req.session.currentUser.role === 'student') {
-    const userGrade = req.session.currentUser.grade;
     Course.find({ grade: userGrade })
       .sort({ name: 1 })
       .then((courses) => {
@@ -25,6 +25,21 @@ router.get('/', (req, res) => {
       .catch((error) => {
         console.log('There has been an error ==> ', error);
       });
+  } else if (req.session.currentUser.role === 'teacher') {
+    Course.find({})
+      .sort({ name: 1 })
+      .then((courses) => {
+        res.render('./courses/courses', {
+          courses,
+          currentUser: req.session.currentUser,
+          isTeacher: req.session.currentUser.role === 'teacher',
+        });
+      })
+      .catch((error) => {
+        console.log('There has been an error ==> ', error);
+      });
+  } else {
+    res.render('not-found');
   }
 });
 
@@ -36,6 +51,7 @@ router.post('/', (req, res) => {
       res.render('./courses/courses', {
         courses,
         currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
       });
     })
     .catch((error) => {
@@ -44,7 +60,10 @@ router.post('/', (req, res) => {
 });
 
 router.get('/new', (req, res) => {
-  res.render('newCourse', { currentUser: req.session.currentUser });
+  res.render('newCourse', {
+    currentUser: req.session.currentUser,
+    isTeacher: req.session.currentUser.role === 'teacher',
+  });
 });
 
 router.post('/new', fileUploader.single('courseImage'), (req, res) => {
@@ -66,33 +85,12 @@ router.post('/new', fileUploader.single('courseImage'), (req, res) => {
 router.get('/:courseId', (req, res) => {
   const { courseId } = req.params;
 
-  Course.findOne({ _id: courseId, owner: req.session.currentUser._id })
-    .populate('owner')
+  Course.findOne({ _id: courseId })
     .then((courseFromDatabase) => {
-      const mongoDbObject = courseFromDatabase.toJSON();
-
-      const newObject = { ...mongoDbObject, birthDate: birthDateFormatted };
-
-      const speciesValues = [
-        { value: 'dog', text: 'Cachorro' },
-        { value: 'cat', text: 'Gato' },
-        { value: 'parrot', text: 'Papagaio' },
-      ];
-
-      const petIndex = speciesValues.findIndex((speciesOption) => {
-        return speciesOption.value === newObject.species;
-      });
-
-      const foundSpeciesValue = speciesValues[petIndex];
-
-      speciesValues.splice(petIndex, 1);
-
-      speciesValues.unshift(foundSpeciesValue);
-
-      res.render('courseDetail', {
-        pet: newObject,
-        speciesValues,
+      res.render('./courses/courseDetail', {
+        course: courseFromDatabase,
         currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
       });
     })
     .catch(() => {
@@ -100,26 +98,36 @@ router.get('/:courseId', (req, res) => {
     });
 });
 
-router.post('/edit/:courseId', (req, res) => {
-  const { petName, petImage, petSpecies, petBirthDate } = req.body;
-  const { petId } = req.params;
+router.post(
+  '/:courseId/edit',
+  fileUploader.single('courseImage'),
+  (req, res) => {
+    const {
+      courseName,
+      courseGrade,
+      courseDescription,
+      courseTeacher,
+    } = req.body;
+    const { courseId } = req.params;
 
-  Course.findAndUpdate(
-    { _id: petId, owner_id: req.session.currentUser._id },
-    {
-      name: petName,
-      image: petImage,
-      species: petSpecies,
-      birthDate: new Date(petBirthDate),
-    }
-  )
-    .then(() => {
-      res.redirect(`/pets/${petId}`);
-    })
-    .catch((error) => {
-      console.log('Error editing Pet information ==>', error);
-      res.render('not-found');
-    });
-});
+    Course.findAndUpdate(
+      { _id: courseId },
+      {
+        name: courseName,
+        description: courseDescription,
+        image: req.file.path,
+        grade: courseGrade,
+        teacher: courseTeacher,
+      }
+    )
+      .then(() => {
+        res.redirect(`/courses/${courseId}`);
+      })
+      .catch((error) => {
+        console.log('Error editing Course information ==>', error);
+        res.render('not-found');
+      });
+  }
+);
 
 module.exports = router;

@@ -1,44 +1,81 @@
 <h4>{{course.name}}</h4>
-<img src="{{course.image}}" alt="{{course.name}} image">
-<p>Descrição: {{course.description}}</p>
-<p>Professor: {{course.teacher}}</p>
-<p>Série: {{course.grade}}</p>
+<div class="content-container">
+  <img class="content-img" src="{{course.image}}" alt="{{course.name}} image">
+  <div>
+    <p>Descrição: {{course.description}}</p>
+    <p>Professor: {{course.teacher}}</p>
+    <p>Série: {{course.grade}}</p>
+  </div>
+</div>
 
-
-{{#if currentUser.role === 'teacher'}}
+{{#if isTeacher}}
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editPet">
-  Editar dados do curso
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editCourse">
+  Editar curso
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="editPet" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+<div class="modal fade" id="editCourse" tabindex="-1" aria-labelledby="editCourseLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Editar meu pet</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h5 class="modal-title" id="editCourseLabel">Editar conteúdo de {{course.name}} do {{course.grade}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      {{!-- <form action="/pets/edit/?petId={{pet._id}}" method="post"></form> Passando via. REQ.QUERY (query string) --}}
-      <form action="/courses/edit/{{pet._id}}" method="post"> {{!-- Passando via REQ.PARAMS--}}
+      <form action="/courses/{{course._id}}/edit" method="post" enctype="multipart/form-data">
         <div class="modal-body">
-            <input type="text" name="petName" placeholder="Nome do Pet" value="{{pet.name}}">
-            <input type="text" name="petImage" placeholder="Link da foto do Pet" value="{{pet.image}}">
-            <select name="petSpecies">
-                {{#each speciesValues}}
-                    <option value={{this.value}}>{{this.text}}</option>
-                {{/each}}
-            </select>
-            <input type="date" name="petBirthDate" value="{{pet.birthDate}}">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <input type="text" class="form-control" placeholder="Curso" name="courseName" value={{course.name}}>
+            </div>
+            <div class="col-md-6">
+              <input type="text" class="form-control" placeholder="Descrição" name="courseDescription" value={{course.description}}>
+            </div>
+            <div class="col-md-6">
+              <input type="text" class="form-control" placeholder="Email" name="courseTeacher" value={{course.teacher}}>
+            </div>
+            <div class="mb-3">
+              <input type="file" class="form-control" placeholder="Foto do curso" name="courseImage">
+            </div>
+            <div class="mb-3" id="courseGradeInput">
+        <label for="courseGrade" class="form-label">Série do curso:</label>
+        <select class="form-select" name="courseGrade">
+          {{#each gradesValues}}
+            <option value={{this.value}}>{{this.text}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-            <button type="submit" class="btn btn-primary">Salvar alterações</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button type="submit" class="btn btn-primary">Salvar alterações</button>
         </div>
       </form>
-      
+    </div>
+  </div>
+</div>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteCourse">
+  Deletar curso
+</button>
+
+<div class="modal fade" id="deleteCourse" tabindex="-1" aria-labelledby="deleteCourseLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteCourseLabel">Deletar {{course.name}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/courses/{{course._id}}/delete" method="post">
+        <div class="modal-body">
+        <p>Tem certeza de que deseja remover o curso {{course.name}} do {{course.grade}} da plataforma?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Deletar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

@@ -10,7 +10,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/">
             <img src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="30" height="24" class="d-inline-block align-text-top">
                 Escola do Futuro
             </a>
@@ -19,20 +19,24 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         {{#if currentUser}}
             <li class="nav-item">
-                <a class="nav-link" href="/courses">Minhas matérias</a>
+                <a class="nav-link" href="/courses">Matérias</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/careers">Minhas carreiras</a>
+                <a class="nav-link" href="/careers">Carreiras</a>
             </li>
+            {{#if isTeacher}}
+                <li class="nav-item">
+                    <a class="nav-link" href="/students">Alunos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/parents">Pais</a>
+                </li>
+            {{/if}}
             <li class="nav-item">
-                <a class="nav-link disabled" href="/logout" tabindex="-1" aria-disabled="true">Sair</a>
+                <a class="nav-link" href="/logout">Sair</a>
             </li>
-    {{!-- {{else if currentUser.role === 'teacher'}}
-        <a href="/courses/{{currentUser._id}}">Minhas matérias</a>
-        <a href="/courses/new">Criar nova matérias</a>
-        <a href="/logout">Sair</a> --}}
     {{else}}
-        <li class="nav-item dropdown">
+        {{!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="/login" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Entrar
           </a>
@@ -42,6 +46,9 @@
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="/login/parents">Portal dos Pais</a></li>
           </ul>
+        </li> --}}
+        <li class="nav-item">
+            <a class="nav-link" href="/login">Entrar</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/new/student">Criar nova conta para aluno</a>
@@ -57,5 +64,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
 <script src="/javascripts/eventListeners.js"></script>
+<script src="/javascripts/dataComponents.js"></script>
 </body>
 </html>

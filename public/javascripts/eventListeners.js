@@ -1,3 +1,8 @@
+// document.getElementById('editStudent').addEventListener('click', () => {
+//   console.log('Event Listener ativado!');
+//   document.getElementById('editStudent').className = 'modal';
+// });
+
 // Edits displayed fields in User Creation form depending on their role
 
 // document.getElementById('newUserRole').addEventListener('input', (event) => {

@@ -12,19 +12,18 @@ const User = require('../models/User');
 const fileUploader = require('../config/cloudinary.config');
 
 router.get('/', (req, res) => {
-  if (req.session.currentUser.role === 'student') {
-    Career.find()
-      .sort({ name: 1 })
-      .then((careers) => {
-        res.render('./careers/careers', {
-          careers,
-          currentUser: req.session.currentUser,
-        });
-      })
-      .catch((error) => {
-        console.log('There has been an error ==> ', error);
+  Career.find()
+    .sort({ name: 1 })
+    .then((careers) => {
+      res.render('./careers/careers', {
+        careers,
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
       });
-  }
+    })
+    .catch((error) => {
+      console.log('There has been an error ==> ', error);
+    });
 });
 
 router.post('/', (req, res) => {
@@ -35,6 +34,7 @@ router.post('/', (req, res) => {
       res.render('./careers/careers', {
         careers,
         currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
       });
     })
     .catch((error) => {

@@ -107,11 +107,13 @@ const coursesToAdd = [
 
 const mongoose = require('mongoose');
 require('../config/mongodb.config');
+require('dotenv').config();
 const Course = require('../models/Course');
 
 Course.create(coursesToAdd)
   .then((courses) => {
     console.log('Courses have been added to the database');
+    mongoose.disconnect();
   })
   .catch((error) => {
     console.log(

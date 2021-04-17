@@ -1,0 +1,35 @@
+<h1>Pais</h1>
+
+<a href="/new/parent"><button class="btn btn-primary">Criar novo pai</button></a>
+
+<form action="/parents" method="post">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="parentName" placeholder="Nome do pai que gostaria de encontrar">
+        <button type="submit" class="btn btn-primary">Buscar Pai</button>
+    </div>
+</form>
+
+
+{{#if parents}}
+<div class="item-list">
+    {{#each parents}}
+        <div class="card content-card" style="width: 18rem;">
+            <img src="{{this.profilePicture}}" class="card-img-top item-img" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">{{this.firstName}} {{this.lastName}}</h5>
+                <p class="card-text">
+                    {{#if this.children}}
+                        Filhos:
+                        {{#each this.children}}
+                            <li>{{this.firstName}} {{this.lastName}} - {{this.grade}}</li>
+                        {{/each}}
+                    {{/if}}
+                </p>
+                <a href="/parents/{{this._id}}" class="btn btn-primary">Ver detalhes do pai</a>
+            </div>
+        </div>
+    {{/each}}
+</div>
+{{else}}
+    <h1>Nenhum pai encontrado. Tente novamente.</h1>
+{{/if}}

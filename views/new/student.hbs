@@ -9,43 +9,43 @@
         {{/if}}
       </div>
       <div class="col-md-6">
-        <input type="text" class="form-control" placeholder="Nome" name="newUserFirstName">
+        <input type="text" class="form-control" placeholder="Nome" name="newUserFirstName" value={{newUserFirstName}}>
       </div>
       <div class="col-md-6">
-        <input type="text" class="form-control" placeholder="Sobrenome" name="newUserLastName">
+        <input type="text" class="form-control" placeholder="Sobrenome" name="newUserLastName" value={{newUserLastName}}>
       </div>
       <div class="col-md-6">
-        {{!-- {{#if validationErrors.firstNameErrors}}
-          <span class="text-danger">{{validationErrors.firstNameErrors.0}}</span>
-        {{/if}} --}}
+        {{#if validationErrors.userFirstNameErrors}}
+          <span class="text-danger">{{validationErrors.userFirstNameErrors.[0]}}</span>
+        {{/if}}
       </div>
       <div class="col-md-6">
-        {{!-- {{#if validationErrors.lastNameErrors}}
-          <span class="text-danger">{{validationErrors.lastNameErrors.0}}</span>
-        {{/if}} --}}
+        {{#if validationErrors.userLastNameErrors}}
+          <span class="text-danger">{{validationErrors.userLastNameErrors.[0]}}</span>
+        {{/if}}
       </div>
       <div class="col-md-6">
-        <input type="email" class="form-control" placeholder="Email" name="newUserEmail">
+        <input type="email" class="form-control" placeholder="Email" name="newUserEmail" value={{newUserEmail}}>
       </div>
       <div class="col-md-6">
         <input type="password" class="form-control" placeholder="Senha" name="newUserPassword">
       </div>
       <div class="col-md-6">
-        {{!-- {{#if validationErrors.emailErrors}}
-          <span class="text-danger">{{validationErrors.emailErrors.0}}</span>
-        {{/if}} --}}
+        {{#if validationErrors.userEmailErrors}}
+          <span class="text-danger">{{validationErrors.userEmailErrors.[0]}}</span>
+        {{/if}}
       </div>
       <div class="col-md-6">
-        {{!-- {{#if validationErrors.passwordErrors}}
-          <span class="text-danger">{{validationErrors.passwordErrors.0}}</span>
-        {{/if}} --}}
+        {{#if validationErrors.userPasswordErrors}}
+          <span class="text-danger">{{validationErrors.userPasswordErrors.[0]}}</span>
+        {{/if}}
       </div>
       <div class="mb-3" id="newStudentGradeInput">
         <label for="newUserGrade" class="form-label">Série que o aluno cursa atualmente:</label>
         <select class="form-select" name="newUserGrade">
-          <option selected value="1EM">1º ano do Ensino Médio</option>
-          <option value="2EM">2º ano do Ensino Médio</option>
-          <option value="3EM">3º ano do Ensino Médio</option>
+          {{#each gradesValues}}
+            <option value={{this.value}}>{{this.text}}</option>
+          {{/each}}
         </select>
       </div>
     </div>
