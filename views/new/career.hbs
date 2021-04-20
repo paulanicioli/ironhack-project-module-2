@@ -1,0 +1,28 @@
+<h1>Crie uma nova carreira:</h1>
+
+<form action="/new/career" method="post" enctype="multipart/form-data">
+  <div id="newCourseForm">
+    <div class="row g-3">
+      <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Nome da carreira" name="newCareerName" value={{newCareerName}}>
+      </div>
+      <div class="col-md-12">
+        {{#if nameError}}
+          <span class="text-danger">{{nameError}}</span>
+        {{/if}}
+      </div>
+      <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Descrição da carreira" name="newCareerDescription" value={{newCareerDescription}}>
+      </div>
+      <div class="col-md-12">
+        {{#if descriptionError}}
+          <span class="text-danger">{{descriptionError}}</span>
+        {{/if}}
+      </div>
+      <div class="mb-3">
+              <input type="file" class="form-control" placeholder="Foto do curso" name="careerImage">
+            </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Salvar e disponibilizar carreira para acesso</button>
+</form>

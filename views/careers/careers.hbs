@@ -1,5 +1,9 @@
 <h1>Carreiras</h1>
 
+{{#if isTeacher}}
+<a href="/new/career"><button class="btn btn-primary">Criar nova carreira</button></a>
+{{/if}}
+
 <form action="/careers" method="post">
     <div class="input-group mb-3">
         <input type="text" class="form-control" name="careerName" placeholder="Digite a carreira que gostaria de encontrar">
@@ -11,16 +15,16 @@
 {{#if careers}}
 <div class="item-list">
     {{#each careers}}
-        <div class="card content-card" style="width: 18rem;">
+        <div class="card content-card" style="width: 15rem;">
             <img src="{{this.image}}" class="card-img-top item-img" alt="...">
             <div class="card-body">
                 <h5 class="card-title">{{this.name}}</h5>
                 <p class="card-text">{{this.description}}</p>
-                <a href="/courses/{{this._id}}" class="btn btn-primary">Ver detalhes da carreira</a>
+                <a href="/careers/{{this._id}}" class="btn btn-primary">Ver detalhes</a>
             </div>
         </div>
     {{/each}}
 </div>
 {{else}}
-    <h1>Nenhuma carreira encontrado. Tente novamente.</h1>
+    <h1>Nenhuma carreira encontrada. Tente novamente.</h1>
 {{/if}}

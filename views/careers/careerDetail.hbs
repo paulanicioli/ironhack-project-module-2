@@ -1,0 +1,72 @@
+<h4>{{career.name}}</h4>
+<div class="content-container">
+  <img class="content-img" src="{{career.image}}" alt="{{career.name}} image">
+  <div>
+    <h5>Descrição: <span>{{career.description}}</span></h5>
+  </div>
+</div>
+
+{{#if isTeacher}}
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editCareer">
+  Editar carreira
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="editCareer" tabindex="-1" aria-labelledby="editCareerLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editCareerLabel">Editar conteúdo de {{career.name}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/careers/{{career._id}}/edit" method="post" enctype="multipart/form-data">
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="mb-3">
+              <label for="careerName">Nome do carreira:</label>
+              <input type="text" class="form-control" placeholder="Carreira" name="careerName" value="{{career.name}}">
+            </div>
+            <div class="mb-3">
+              <label for="careerDescription">Descrição:</label>
+              <input type="text" class="form-control" placeholder="Descrição" name="careerDescription" value="{{career.description}}">
+            </div>
+            <div class="mb-3">
+              <input type="file" class="form-control" placeholder="Foto do curso" name="careerImage">
+            </div>
+    </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button type="submit" class="btn btn-primary">Salvar alterações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteCareer">
+  Deletar carreira
+</button>
+
+<div class="modal fade" id="deleteCareer" tabindex="-1" aria-labelledby="deleteCareerLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteCourseLabel">Deletar {{career.name}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/careers/{{career._id}}/delete" method="post">
+        <div class="modal-body">
+        <p>Tem certeza de que deseja remover a carreira {{career.name}} da plataforma?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Deletar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{{/if}}

@@ -1,10 +1,10 @@
 <h4>{{student.firstName}} {{student.lastName}}</h4>
 <div class="content-container">
   <img class="content-img" src="{{student.profilePicture}}" alt="{{student.firstName}} image">
-  <div><h3>Email: <span>{{student.email}}</span></p>
-  <h3>Data de nascimento: <span>{{birthDateFormatted}}</span></p>
-  <h3>Série: <span>{{student.grade}}</span></p>
-  <h3>Pais:
+  <div><h5>Email: <span>{{student.email}}</span></h5>
+  <h5>Data de nascimento: <span>{{birthDateFormatted}}</span></h5>
+  <h5>Série: <span>{{student.grade}}</span></h5>
+  <h5>Pais:
     {{#if parents}}
       <ul>
       {{#each parents}}
@@ -14,7 +14,7 @@
       {{/each}}
       </ul>
     {{/if}}
-  </h3>
+  </h5>
   <a href="/new/parent?studentId={{student._id}}"><button class="btn btn-primary">Adicionar pai/mãe</button></a>
   </div>
 </div>

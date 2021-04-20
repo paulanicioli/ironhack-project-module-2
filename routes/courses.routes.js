@@ -3,6 +3,8 @@ const { format } = require('date-format-parse');
 
 require('dotenv').config();
 
+const { gradesValues } = require('../public/javascripts/dataComponents');
+
 const router = express();
 
 const Course = require('../models/Course');
@@ -15,11 +17,17 @@ router.get('/', (req, res) => {
   const userGrade = req.session.currentUser.grade;
   if (req.session.currentUser.role === 'student') {
     Course.find({ grade: userGrade })
+      .populate('teacher')
       .sort({ name: 1 })
       .then((courses) => {
+        const teachers = courses.map((element) => {
+          return element.teacher;
+        });
+        console.log([...new Set(teachers)]);
         res.render('./courses/courses', {
           courses,
           currentUser: req.session.currentUser,
+          gradesValues,
         });
       })
       .catch((error) => {
@@ -27,12 +35,21 @@ router.get('/', (req, res) => {
       });
   } else if (req.session.currentUser.role === 'teacher') {
     Course.find({})
+      .populate('teacher')
       .sort({ name: 1 })
       .then((courses) => {
+        const teachers = courses
+          .map((element) => {
+            return element.teacher;
+          })
+          .sort((a, b) => a.firstName.localeCompare(b.firstName));
+        const uniqueTeachers = [...new Set(teachers)];
         res.render('./courses/courses', {
           courses,
           currentUser: req.session.currentUser,
           isTeacher: req.session.currentUser.role === 'teacher',
+          gradesValues,
+          teachers: uniqueTeachers,
         });
       })
       .catch((error) => {
@@ -86,14 +103,48 @@ router.get('/:courseId', (req, res) => {
   const { courseId } = req.params;
 
   Course.findOne({ _id: courseId })
+    .populate('teacher')
     .then((courseFromDatabase) => {
-      res.render('./courses/courseDetail', {
-        course: courseFromDatabase,
-        currentUser: req.session.currentUser,
-        isTeacher: req.session.currentUser.role === 'teacher',
-      });
+      if (courseFromDatabase.grade) {
+        const gradeIndex = gradesValues.findIndex((option) => {
+          return option.value === courseFromDatabase.grade;
+        });
+        const foundGradeValue = gradesValues[gradeIndex];
+
+        gradesValues.splice(gradeIndex, 1);
+
+        gradesValues.unshift(foundGradeValue);
+      }
+      User.find({ role: 'teacher' })
+        .sort({ firstName: 1 })
+        .then((teachers) => {
+          if (courseFromDatabase.teacher) {
+            const teacherIndex = teachers.findIndex((element) => {
+              return element._id === courseFromDatabase.teacher;
+            });
+            if (teacherIndex >= 0) {
+              const foundTeacher = teachers[teacherIndex];
+              teachers.splice(teacherIndex, 1);
+              teachers.unshift(foundTeacher);
+            }
+          }
+          res.render('./courses/courseDetail', {
+            course: courseFromDatabase,
+            teachers,
+            gradesValues,
+            currentUser: req.session.currentUser,
+            isTeacher: req.session.currentUser.role === 'teacher',
+          });
+        })
+        .catch((error) => {
+          console.log(
+            'There has been an error while finding teachers ===> ',
+            error
+          );
+        });
     })
-    .catch(() => {
+    .catch((e) => {
+      console.log('There has been an error finding the course ===> ', e);
       res.render('not-found');
     });
 });
@@ -108,20 +159,23 @@ router.post(
       courseDescription,
       courseTeacher,
     } = req.body;
+
     const { courseId } = req.params;
 
-    Course.findAndUpdate(
-      { _id: courseId },
-      {
-        name: courseName,
-        description: courseDescription,
-        image: req.file.path,
-        grade: courseGrade,
-        teacher: courseTeacher,
-      }
-    )
+    const editedCourse = {
+      name: courseName,
+      description: courseDescription,
+      grade: courseGrade,
+      teacher: courseTeacher,
+    };
+
+    if (req.file) {
+      editedCourse.image = req.file.path;
+    }
+
+    Course.findOneAndUpdate({ _id: courseId }, editedCourse)
       .then(() => {
-        res.redirect(`/courses/${courseId}`);
+        res.redirect('/courses/' + courseId);
       })
       .catch((error) => {
         console.log('Error editing Course information ==>', error);
@@ -129,5 +183,18 @@ router.post(
       });
   }
 );
+
+router.post('/:courseId/delete', (req, res) => {
+  const { courseId } = req.params;
+
+  Course.findByIdAndDelete(courseId)
+    .then(() => {
+      res.redirect('/courses/');
+    })
+    .catch((error) => {
+      console.log('Error deleting course ==>', error);
+      res.render('not-found');
+    });
+});
 
 module.exports = router;

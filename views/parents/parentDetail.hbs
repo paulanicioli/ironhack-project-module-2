@@ -1,9 +1,9 @@
 <h4>{{parent.firstName}} {{parent.lastName}}</h4>
 <div class="content-container">
   <img class="content-img" src="{{parent.profilePicture}}" alt="{{parent.firstName}} image">
-  <div><h3>Email: <span>{{parent.email}}</span></p>
-  <h3>Data de nascimento: <span>{{birthDateFormatted}}</span></p>
-  <h3>Filhos:
+  <div><h5>Email: <span>{{parent.email}}</span></h5>
+  <h5>Data de nascimento: <span>{{birthDateFormatted}}</span></h5>
+  <h5>Filhos:
     {{#if parent.children}}
       <ul>
       {{#each parent.children}}
@@ -13,7 +13,7 @@
       {{/each}}
       </ul>
     {{/if}}
-  </h3>
+  </h5>
   <a href="/new/student?parentId={{parent._id}}"><button class="btn btn-primary">Adicionar filho</button></a>
   </div>
 </div>

@@ -1,17 +1,31 @@
-<h1>Bem vindo a escola do Futuro! Faça seu login</h1>
+<div id="login-form">
+<h1>Bem vindo a Escola do Futuro! Faça seu login:</h1>
 
-<form action="/login" method="post">
-<div>
-    <input type="email" name="userEmail" placeholder="Digite seu email">
+<form action="/login" method="post" class="px-4 py-3 needs-validation" novalidate>
+    <div class="mb-3">
+      <label for="userEmail" class="form-label">Endereço de email:</label>
+      <input type="email" class="form-control" name="userEmail" placeholder="exemplo@escoladofuturo.com" required value={{userEmail}}>
+    </div>
+    <div class="mb-3">
+      <label for="userPassword" class="form-label">Digite sua senha:</label>
+      <input type="password" class="form-control is-invalid" name="userPassword" required placeholder="**********">
+         {{#if loginError}}
+            <div class="invalid-feedback">
+            {{loginError}}
+            </div>
+        {{/if}}
+    </div>
+    <div class="mb-3">
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="dropdownCheck">
+        <label class="form-check-label" for="dropdownCheck">
+          Lembrar da minha conta
+        </label>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Efetuar login</button>
+  </form>
+  <div class="dropdown-divider"></div>
+  <a class="dropdown-item" href="#">Novo por aqui? Solicite a criação da sua conta</a>
+  <a class="dropdown-item" href="#">Esqueceu sua senha?</a>
 </div>
-<div>
-    <input type="password" name="userPassword" placeholder="Digite sua senha">
-    
-</div>
-<div>
-    {{#if loginError}}
-        <span class="text-danger">{{loginError}}</span>
-    {{/if}}
-</div>
-<button type="submit" class="btn btn-primary">Efetuar login</button>
-</form>

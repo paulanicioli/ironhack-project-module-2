@@ -1,24 +1,36 @@
 <h1>Alunos</h1>
 
+<div class="d-flex justify-content-between">
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Filtrar por série        
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            {{#each gradesValues}}
+                <li><a class="dropdown-item" href="/students?grade={{this.value}}">{{this.text}}</a></li>
+            {{/each}}
+        </ul>
+    </div>
+
 <a href="/new/student"><button class="btn btn-primary">Criar novo aluno</button></a>
 
 <form action="/students" method="post">
     <div class="input-group mb-3">
-        <input type="text" class="form-control" name="studentName" placeholder="Nome do aluno que gostaria de encontrar">
+        <input type="text" class="form-control" name="studentName" placeholder="Nome do aluno">
         <button type="submit" class="btn btn-primary">Buscar Aluno</button>
     </div>
 </form>
-
+</div>
 
 {{#if students}}
 <div class="item-list">
     {{#each students}}
-        <div class="card content-card" style="width: 18rem;">
+        <div class="card content-card" style="width: 15rem;">
             <img src="{{this.profilePicture}}" class="card-img-top item-img" alt="...">
             <div class="card-body">
                 <h5 class="card-title">{{this.firstName}} {{this.lastName}}</h5>
                 <p class="card-text">{{this.grade}}</p>
-                <a href="/students/{{this._id}}" class="btn btn-primary">Ver detalhes do aluno</a>
+                <a href="/students/{{this._id}}" class="btn btn-primary">Ver detalhes</a>
             </div>
         </div>
     {{/each}}

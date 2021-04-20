@@ -1,22 +1,47 @@
 <h1>Matérias</h1>
+{{#if isTeacher}}
 
+<div class="d-flex justify-content-between">
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Filtrar por série        
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            {{#each gradesValues}}
+                <li><a class="dropdown-item" href="/courses?grade={{this.value}}">{{this.text}}</a></li>
+            {{/each}}
+        </ul>
+    </div>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+    Filtrar por professor       
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+            {{#each teachers}}
+                <li><a class="dropdown-item" href="/courses?teacher={{this._id}}">{{this.firstName}} {{this.lastName}}</a></li>
+            {{/each}}
+        </ul>
+    </div>
+<a href="/new/course"><button class="btn btn-primary">Criar nova matéria</button></a>
+{{/if}}
 <form action="/courses" method="post">
     <div class="input-group mb-3">
-        <input type="text" class="form-control" name="courseName" placeholder="Digite a matéria que gostaria de encontrar">
+        <input type="text" class="form-control" name="courseName" placeholder="Nome da matéria">
         <button type="submit" class="btn btn-primary">Buscar Matéria</button>
     </div>
 </form>
-
+</div>
 
 {{#if courses}}
 <div class="item-list">
     {{#each courses}}
-        <div class="card content-card" style="width: 18rem;">
+        <div class="card content-card" style="width: 15rem;">
             <img src="{{this.image}}" class="card-img-top item-img" alt="...">
             <div class="card-body">
                 <h5 class="card-title">{{this.name}}</h5>
-                <p class="card-text">{{this.description}}</p>
-                <a href="/courses/{{this._id}}" class="btn btn-primary">Ver detalhes da matéria</a>
+                <p class="card-text">Professor: {{this.teacher.firstName}} {{this.teacher.lastName}}</p>
+                <p class="card-text">Série: {{this.grade}}</p>
+                <a href="/courses/{{this._id}}" class="btn btn-primary">Ver detalhes</a>
             </div>
         </div>
     {{/each}}

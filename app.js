@@ -8,6 +8,7 @@ const parentRoutes = require('./routes/parents.routes');
 const coursesRoutes = require('./routes/courses.routes');
 const careerRoutes = require('./routes/careers.routes');
 const authRoutes = require('./routes/auth.routes');
+const newRoutes = require('./routes/new.routes');
 
 const cookieParser = require('cookie-parser');
 
@@ -60,6 +61,8 @@ app.use((req, res, next) => {
 app.use('/students', studentRoutes);
 
 app.use('/parents', parentRoutes);
+
+app.use('/new', newRoutes);
 
 // catch 404 and render a not-found.hbs template
 app.use((req, res, next) => {

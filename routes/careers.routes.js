@@ -43,18 +43,23 @@ router.post('/', (req, res) => {
 });
 
 router.get('/new', (req, res) => {
-  res.render('newCareer', { currentUser: req.session.currentUser });
+  res.render('new/career', {
+    currentUser: req.session.currentUser,
+    isTeacher: req.session.currentUser.role === 'teacher',
+  });
 });
 
-router.post('/new', fileUploader.single('careerImage'), (req, res) => {
+router.post('/new', fileUploader.single('careerImage'), async (req, res) => {
   const { careerName, careerDescription } = req.body;
   const newCareer = {
     name: careerName,
-    image: req.file.path,
     description: careerDescription,
     creator: req.session.currentUser._id,
   };
-  Career.create(newCareer)
+  if (req.file) {
+    newCareer.image = req.file.path;
+  }
+  await Career.create(newCareer)
     .then(() => {
       res.redirect('/careers');
     })
@@ -64,33 +69,12 @@ router.post('/new', fileUploader.single('careerImage'), (req, res) => {
 router.get('/:careerId', (req, res) => {
   const { careerId } = req.params;
 
-  Career.findOne({ _id: careerId, owner: req.session.currentUser._id })
-    .populate('owner')
-    .then((courseFromDatabase) => {
-      const mongoDbObject = courseFromDatabase.toJSON();
-
-      const newObject = { ...mongoDbObject, birthDate: birthDateFormatted };
-
-      const speciesValues = [
-        { value: 'dog', text: 'Cachorro' },
-        { value: 'cat', text: 'Gato' },
-        { value: 'parrot', text: 'Papagaio' },
-      ];
-
-      const petIndex = speciesValues.findIndex((speciesOption) => {
-        return speciesOption.value === newObject.species;
-      });
-
-      const foundSpeciesValue = speciesValues[petIndex];
-
-      speciesValues.splice(petIndex, 1);
-
-      speciesValues.unshift(foundSpeciesValue);
-
-      res.render('courseDetail', {
-        pet: newObject,
-        speciesValues,
+  Career.findOne({ _id: careerId })
+    .then((career) => {
+      res.render('careers/careerDetail', {
+        career,
         currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
       });
     })
     .catch(() => {
@@ -98,24 +82,41 @@ router.get('/:careerId', (req, res) => {
     });
 });
 
-router.post('/edit/:courseId', (req, res) => {
-  const { petName, petImage, petSpecies, petBirthDate } = req.body;
-  const { petId } = req.params;
+router.post(
+  '/:careerId/edit',
+  fileUploader.single('careerImage'),
+  (req, res) => {
+    const { careerName, careerDescription } = req.body;
+    const { careerId } = req.params;
 
-  Course.findAndUpdate(
-    { _id: petId, owner_id: req.session.currentUser._id },
-    {
-      name: petName,
-      image: petImage,
-      species: petSpecies,
-      birthDate: new Date(petBirthDate),
+    const editedCareer = {
+      name: careerName,
+      description: careerDescription,
+    };
+
+    if (req.file) {
+      editedCareer.image = req.file.path;
     }
-  )
+
+    Career.findOneAndUpdate({ _id: careerId }, editedCareer)
+      .then(() => {
+        res.redirect(`/careers/${careerId}`);
+      })
+      .catch((error) => {
+        res.render('not-found');
+      });
+  }
+);
+
+router.post('/:careerId/delete', (req, res) => {
+  const { careerId } = req.params;
+
+  Career.findByIdAndDelete(careerId)
     .then(() => {
-      res.redirect(`/pets/${petId}`);
+      res.redirect('/careers/');
     })
     .catch((error) => {
-      console.log('Error editing Pet information ==>', error);
+      console.log('Error deleting career ==>', error);
       res.render('not-found');
     });
 });

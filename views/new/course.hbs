@@ -1,0 +1,60 @@
+<h1>Crie uma nova matéria:</h1>
+
+<form action="/new/course" method="post" enctype="multipart/form-data">
+  <div id="newCourseForm">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="newCourseCode">Código da matéria:</label>
+      </div>
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Código único da matéria" name="newCourseCode" value={{newCourseCode}}>
+      </div>
+       <div class="col-md-12">
+        {{#if uniquenessError}}
+          <span class="text-danger">{{uniquenessError}}</span>
+        {{/if}}
+      </div>
+      <div class="col-md-12">
+        {{#if codeError}}
+          <span class="text-danger">{{codeError}}</span>
+        {{/if}}
+      </div>
+      <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Nome da matéria" name="newCourseName" value={{newCourseName}}>
+      </div>
+      <div class="col-md-12">
+        {{#if nameError}}
+          <span class="text-danger">{{nameError}}</span>
+        {{/if}}
+      </div>
+      <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Descrição da matéria" name="newCourseDescription" value={{newCourseDescription}}>
+      </div>
+      <div class="col-md-12">
+        {{#if descriptionError}}
+          <span class="text-danger">{{descriptionError}}</span>
+        {{/if}}
+      </div>
+      <div class="mb-3">
+              <input type="file" class="form-control"  name="courseImage">
+            </div>
+      <div class="mb-3" id="CourseTeacherInput">
+        <label for="newCourseTeacher" class="form-label">Professor:</label>
+        <select class="form-select" name="newCourseTeacher">
+          {{#each teachers}}
+            <option value={{this._id}}>{{this.firstName}} {{this.lastName}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="mb-3" id="CourseGradeInput">
+        <label for="newCourseGrade" class="form-label">Série da matéria:</label>
+        <select class="form-select" name="newCourseGrade">
+          {{#each gradesValues}}
+            <option value={{this.value}}>{{this.text}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Salvar e disponibilizar matéria para acesso</button>
+</form>

@@ -7,8 +7,28 @@ const userSchema = new Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, min: 8 },
     birthDate: { type: Date },
-    profilePicture: { type: String },
-    grade: { type: String, enum: ['1EM', '2EM', '3EM'] },
+    profilePicture: {
+      type: String,
+      default:
+        'https://res.cloudinary.com/de4qbzjqh/image/upload/v1618884657/iron-pets-images-repo/file_kfvl7y.jpg',
+    },
+    grade: {
+      type: String,
+      enum: [
+        '1EF',
+        '2EF',
+        '3EF',
+        '4EF',
+        '5EF',
+        '6EF',
+        '7EF',
+        '8EF',
+        '9EF',
+        '1EM',
+        '2EM',
+        '3EM',
+      ],
+    },
     active: { type: Boolean, default: true },
     newsletterOptIn: { type: Boolean },
     role: {

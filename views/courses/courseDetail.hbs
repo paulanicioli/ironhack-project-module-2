@@ -2,9 +2,10 @@
 <div class="content-container">
   <img class="content-img" src="{{course.image}}" alt="{{course.name}} image">
   <div>
-    <p>Descrição: {{course.description}}</p>
-    <p>Professor: {{course.teacher}}</p>
-    <p>Série: {{course.grade}}</p>
+    <h5>Descrição: <span>{{course.description}}</span></h5>
+    <h5>Professor: <span>{{course.teacher.firstName}} {{course.teacher.lastName}}</span></h5>
+    <h5>Email do professor: <span>{{course.teacher.email}}</span></h5>
+    <h5>Série: <span>{{gradesValues.[0].text}}</span></h5>
   </div>
 </div>
 
@@ -25,15 +26,22 @@
       <form action="/courses/{{course._id}}/edit" method="post" enctype="multipart/form-data">
         <div class="modal-body">
           <div class="row g-3">
-            <div class="col-md-6">
-              <input type="text" class="form-control" placeholder="Curso" name="courseName" value={{course.name}}>
+            <div class="mb-3">
+              <label for="courseName">Nome do curso:</label>
+              <input type="text" class="form-control" placeholder="Curso" name="courseName" value="{{course.name}}">
             </div>
-            <div class="col-md-6">
-              <input type="text" class="form-control" placeholder="Descrição" name="courseDescription" value={{course.description}}>
+            <div class="mb-3">
+              <label for="courseDescription">Descrição:</label>
+              <input type="text" class="form-control" placeholder="Descrição" name="courseDescription" value="{{course.description}}">
             </div>
-            <div class="col-md-6">
-              <input type="text" class="form-control" placeholder="Email" name="courseTeacher" value={{course.teacher}}>
-            </div>
+            <div class="mb-3" id="courseTeacherInput">
+        <label for="courseTeacher" class="form-label">Professor:</label>
+        <select class="form-select" name="courseTeacher">
+          {{#each teachers}}
+            <option value={{this._id}}>{{this.firstName}} {{this.lastName}}</option>
+          {{/each}}
+        </select>
+      </div>
             <div class="mb-3">
               <input type="file" class="form-control" placeholder="Foto do curso" name="courseImage">
             </div>

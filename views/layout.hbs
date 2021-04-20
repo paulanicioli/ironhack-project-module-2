@@ -36,33 +36,19 @@
                 <a class="nav-link" href="/logout">Sair</a>
             </li>
     {{else}}
-        {{!-- <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="/login" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Entrar
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="/login/students">Portal do Aluno</a></li>
-            <li><a class="dropdown-item" href="/login/teachers">Portal do Professor</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/login/parents">Portal dos Pais</a></li>
-          </ul>
-        </li> --}}
         <li class="nav-item">
             <a class="nav-link" href="/login">Entrar</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/new/student">Criar nova conta para aluno</a>
         </li>
     {{/if}}
         </ul>
         </div>
         </div>
     </nav>
-    
-    {{{body}}}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+    <div id="main-content">
+        {{{body}}}
+    </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 <script src="/javascripts/eventListeners.js"></script>
 <script src="/javascripts/dataComponents.js"></script>
 </body>

@@ -17,6 +17,7 @@ router.get('/', (req, res) => {
     .then((parents) => {
       res.render('./parents/parents', {
         parents,
+        gradesValues,
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
       });
