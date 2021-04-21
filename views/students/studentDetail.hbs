@@ -3,7 +3,7 @@
   <img class="content-img" src="{{student.profilePicture}}" alt="{{student.firstName}} image">
   <div><h5>Email: <span>{{student.email}}</span></h5>
   <h5>Data de nascimento: <span>{{birthDateFormatted}}</span></h5>
-  <h5>Série: <span>{{student.grade}}</span></h5>
+  <h5>Série: <span>{{gradesValues.[0].text}}</span></h5>
   <h5>Pais:
     {{#if parents}}
       <ul>

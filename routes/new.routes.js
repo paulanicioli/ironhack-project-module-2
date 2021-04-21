@@ -108,13 +108,28 @@ router.post('/student', async (req, res) => {
 
 router.get('/parent', (req, res) => {
   User.find({ role: 'student', active: true })
-    .sort({ grade: 1 })
     .then((students) => {
+      const mongoDbObject = [];
+      students.forEach((element) => {
+        mongoDbObject.push(element.toJSON());
+      });
+      const studentsFromDB = [...mongoDbObject];
+      let gradeIndex = 0;
+      for (let i = 0; i < studentsFromDB.length; i++) {
+        gradeIndex = gradesValues.findIndex((option) => {
+          return option.value === studentsFromDB[i].grade;
+        });
+        studentsFromDB[i].grade_text = gradesValues[gradeIndex].text;
+        studentsFromDB[i].grade_order = gradesValues[gradeIndex].order;
+      }
+      const sortedStudentList = studentsFromDB.sort(
+        (a, b) => a.grade_order - b.grade_order
+      );
       res.render('./new/parent', {
         currentUser: req.session.currentUser,
         studentId: req.query.studentId,
         isTeacher: req.session.currentUser.role === 'teacher',
-        students,
+        students: sortedStudentList,
       });
     })
     .catch((e) => {

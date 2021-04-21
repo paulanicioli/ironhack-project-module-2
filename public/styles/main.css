@@ -6,6 +6,17 @@
   margin: 3vh 5vw;
 }
 
+#home-title {
+  color: #0275d8;
+  font-size: 4em;
+  text-align: center;
+}
+
+.section-title {
+  color: #0275d8;
+  text-align: center;
+}
+
 .input-form {
   position: relative;
   width: 50vw;
@@ -49,4 +60,8 @@ h5 span {
 
 .filter-icon {
   margin-left: 10px;
+}
+
+.reduce-text-size {
+  font-size: 0.85rem;
 }

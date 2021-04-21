@@ -14,8 +14,20 @@ router.get('/', (req, res) => {
   User.find({ role: 'student' })
     .sort({ name: 1 })
     .then((students) => {
+      const newStudentArray = [];
+      students.forEach((element) => {
+        newStudentArray.push(element.toJSON());
+      });
+      const studentsWithGrade = [...newStudentArray];
+      let gradeIndex = -1;
+      for (let i = 0; i < studentsWithGrade.length; i++) {
+        gradeIndex = gradesValues.findIndex((option) => {
+          return option.value === studentsWithGrade[i].grade;
+        });
+        studentsWithGrade[i].grade_text = gradesValues[gradeIndex].text;
+      }
       res.render('./students/students', {
-        students,
+        students: studentsWithGrade,
         gradesValues,
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',

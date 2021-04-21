@@ -1,5 +1,5 @@
 <div class="input-form">
-<h1>Crie uma nova Conta Pai:</h1>
+<h1 class="section-title">Crie uma nova Conta Pai:</h1>
 
 <form action="/new/parent" method="post" class="px-4 py-3 needs-validation">
     <div class="row g-3">
@@ -12,7 +12,7 @@
         <label for="newParentStudent" class="form-label">Escolha o filho:</label>
         <select class="form-select" name="newParentStudent">
           {{#each students}}
-            <option value={{this._id}}>{{this.grade}} - {{this.firstName}} {{this.lastName}}</option>
+            <option value={{this._id}}>{{this.grade_text}} - {{this.firstName}} {{this.lastName}}</option>
           {{/each}}
         </select>
       </div>
