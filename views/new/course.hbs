@@ -8,7 +8,7 @@
         <input type="text" class="form-control 
         {{#if codeError}}
           is-invalid
-        {{/if}}" placeholder="Exemplo: MAT408" name="newCourseCode" value={{newCourseCode}}>
+        {{/if}}" placeholder="Exemplo: MAT408" name="newCourseCode" value="{{newCourseCode}}">
         {{#if codeError}}
           <div class="invalid-feedback">{{codeError}}</div>
         {{/if}}
@@ -19,7 +19,7 @@
         {{#if nameError}}
           is-invalid
         {{/if}}
-        " placeholder="Exemplo: Matemática" name="newCourseName" value={{newCourseName}}>
+        " placeholder="Exemplo: Matemática" name="newCourseName" value="{{newCourseName}}">
         {{#if nameError}}
           <div class="invalid-feedback">{{nameError}}</div>
         {{/if}}

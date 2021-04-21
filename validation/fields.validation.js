@@ -18,7 +18,7 @@ const firstNameValidation = (nameField) => {
     errors.push('Máximo de 50 caracteres.');
   }
 
-  if (nameField.replace(/[A-Za-z]/g, '').trim().length !== 0) {
+  if (nameField.replace(/[A-zÀ-ú]/g, '').trim().length !== 0) {
     errors.push('Somente letras são aceitas.');
   }
 
@@ -45,7 +45,7 @@ const lastNameValidation = (nameField) => {
     errors.push('Máximo de 50 caracteres.');
   }
 
-  if (nameField.replace(/[A-Za-z]/g, '').trim().length !== 0) {
+  if (nameField.replace(/[A-zÀ-ú]/g, '').trim().length !== 0) {
     errors.push('Somente letras são aceitas.');
   }
 
@@ -79,27 +79,6 @@ const passwordValidation = (passwordField) => {
     errors.push(
       'A senha precisa conter pelo menos um número e uma letra maiúscula.'
     );
-  }
-
-  return errors;
-};
-
-const imageValidation = (imageField) => {
-  const errors = [];
-  const urlRegex = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i;
-
-  if (typeof imageField !== 'string') {
-    errors.push('Senha precisa ser um texto!');
-    return errors;
-  }
-
-  if (imageField.trim().length === 0) {
-    errors.push('Campo obrigatório!');
-  }
-
-  if (!urlRegex.test(imageField)) {
-    // valida o formato da URL utilizando um regex
-    errors.push('Formato inválido!');
   }
 
   return errors;
@@ -149,7 +128,6 @@ module.exports = {
   firstNameValidation,
   lastNameValidation,
   passwordValidation,
-  imageValidation,
   dateValidation,
   emailValidation,
 };
