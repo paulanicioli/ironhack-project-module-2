@@ -65,3 +65,7 @@ h5 span {
 .reduce-text-size {
   font-size: 0.85rem;
 }
+
+#welcome-image {
+  margin: 20px;
+}

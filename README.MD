@@ -24,6 +24,6 @@ The application was built having all the different stakeholders at a school in m
 
 ## Inspirations
 
-[Quero Bolsa](https://querobolsa.com.br/)
-[Agenda Edu](https://agendaedu.com/)
-[isaac](https://www.olaisaac.com.br/)
+- [Quero Bolsa](https://querobolsa.com.br/)
+- [Agenda Edu](https://agendaedu.com/)
+- [isaac](https://www.olaisaac.com.br/)
