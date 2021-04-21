@@ -31,6 +31,7 @@ router.post('/student', async (req, res) => {
     newUserEmail,
     newUserPassword,
     newUserGrade,
+    newUserActive,
   } = req.body;
   const validationErrors = validateSignup(
     newUserFirstName,
@@ -49,6 +50,12 @@ router.post('/student', async (req, res) => {
 
   gradesValues.unshift(foundGradeValue);
 
+  let activeCheck = true;
+
+  if (!newUserActive) {
+    activeCheck = false;
+  }
+
   if (Object.keys(validationErrors).length > 0) {
     return res.render('./new/student', {
       validationErrors,
@@ -64,10 +71,17 @@ router.post('/student', async (req, res) => {
   try {
     const userFromDb = await User.findOne({ email: newUserEmail });
     if (userFromDb) {
+      validationErrors.userEmailErrors = [
+        'Erro! Este usuário já está cadastrado!',
+      ];
       return res.render('./new/student', {
-        uniquenessError: 'Erro! Este usuário já está cadastrado!',
+        validationErrors,
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
+        newUserFirstName,
+        newUserLastName,
+        newUserEmail,
+        gradesValues,
       });
     }
 
@@ -84,6 +98,7 @@ router.post('/student', async (req, res) => {
       role: 'student',
       creator: req.session.currentUser._id,
       first_login: true,
+      active: activeCheck,
     });
     res.redirect('/students');
   } catch (error) {
@@ -92,11 +107,22 @@ router.post('/student', async (req, res) => {
 });
 
 router.get('/parent', (req, res) => {
-  res.render('./new/parent', {
-    currentUser: req.session.currentUser,
-    studentId: req.query.studentId,
-    isTeacher: req.session.currentUser.role === 'teacher',
-  });
+  User.find({ role: 'student', active: true })
+    .sort({ grade: 1 })
+    .then((students) => {
+      res.render('./new/parent', {
+        currentUser: req.session.currentUser,
+        studentId: req.query.studentId,
+        isTeacher: req.session.currentUser.role === 'teacher',
+        students,
+      });
+    })
+    .catch((e) => {
+      console.log(
+        'There has been an error displaying the Parent creation form ===> ',
+        e
+      );
+    });
 });
 
 router.post('/parent', async (req, res) => {
@@ -106,7 +132,14 @@ router.post('/parent', async (req, res) => {
     newParentEmail,
     newParentPassword,
     newParentStudent,
+    newParentActive,
   } = req.body;
+
+  let activeCheck = true;
+
+  if (!newParentActive) {
+    activeCheck = false;
+  }
 
   const validationErrors = validateSignup(
     newParentFirstName,
@@ -129,10 +162,16 @@ router.post('/parent', async (req, res) => {
   try {
     const userFromDb = await User.findOne({ email: newParentEmail });
     if (userFromDb) {
+      validationErrors.userEmailErrors = [
+        'Erro! Este usuário já está cadastrado!',
+      ];
       return res.render('./new/parent', {
-        uniquenessError: 'Erro! Este usuário já está cadastrado!',
+        validationErrors,
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
+        newParentFirstName,
+        newParentLastName,
+        newParentEmail,
       });
     }
 
@@ -159,10 +198,11 @@ router.post('/parent', async (req, res) => {
       children: [child._id],
       role: 'parent',
       creator: req.session.currentUser._id,
+      active: activeCheck,
       first_login: true,
     });
 
-    res.redirect('/students');
+    res.redirect('/parents');
   } catch (error) {
     console.log('Erro na rota /signup ===> ', error);
   }
@@ -191,8 +231,13 @@ router.post('/course', fileUploader.single('courseImage'), async (req, res) => {
     newCourseDescription,
     newCourseGrade,
     newCourseTeacher,
+    newCourseActive,
   } = req.body;
 
+  let activeCheck = true;
+  if (!newCourseActive) {
+    activeCheck = false;
+  }
   const teachers = await User.find({ role: 'teacher' })
     .sort({ firstName: 1 })
     .then()
@@ -203,7 +248,7 @@ router.post('/course', fileUploader.single('courseImage'), async (req, res) => {
     return res.render('./new/course', {
       codeError: newCourseCode
         ? null
-        : 'Campo obrigatório! Escola um campo único',
+        : 'Campo obrigatório! Escolha um campo único',
       nameError: newCourseName ? null : 'Campo obrigatório!',
       descriptionError: newCourseDescription ? null : 'Campo obrigatório!',
       currentUser: req.session.currentUser,
@@ -219,7 +264,7 @@ router.post('/course', fileUploader.single('courseImage'), async (req, res) => {
     const courseFromDb = await Course.findOne({ code: newCourseCode });
     if (courseFromDb) {
       return res.render('./new/course', {
-        uniquenessError: 'Erro! Este código já existe!',
+        codeError: 'Erro! Este código já existe!',
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
         teachers,
@@ -235,7 +280,7 @@ router.post('/course', fileUploader.single('courseImage'), async (req, res) => {
       description: newCourseDescription,
       teacher: newCourseTeacher,
       grade: newCourseGrade,
-      active: true,
+      active: activeCheck,
     };
 
     if (req.file) {

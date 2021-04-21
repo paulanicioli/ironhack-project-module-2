@@ -1,14 +1,20 @@
-<div id="login-form">
+<div class="input-form">
 <h1>Bem vindo a Escola do Futuro! Faça seu login:</h1>
 
 <form action="/login" method="post" class="px-4 py-3 needs-validation" novalidate>
     <div class="mb-3">
       <label for="userEmail" class="form-label">Endereço de email:</label>
-      <input type="email" class="form-control" name="userEmail" placeholder="exemplo@escoladofuturo.com" required value={{userEmail}}>
+      <input type="email" class="form-control 
+        {{#if loginError}}
+          is-invalid
+        {{/if}}" name="userEmail" placeholder="exemplo@escoladofuturo.com" required value={{userEmail}}>
     </div>
     <div class="mb-3">
       <label for="userPassword" class="form-label">Digite sua senha:</label>
-      <input type="password" class="form-control is-invalid" name="userPassword" required placeholder="**********">
+      <input type="password" class="form-control 
+        {{#if loginError}}
+          is-invalid
+        {{/if}}" name="userPassword" required placeholder="**********">
          {{#if loginError}}
             <div class="invalid-feedback">
             {{loginError}}

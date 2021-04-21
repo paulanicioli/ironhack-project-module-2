@@ -115,12 +115,12 @@ router.get('/:courseId', (req, res) => {
 
         gradesValues.unshift(foundGradeValue);
       }
-      User.find({ role: 'teacher' })
+      User.find({ role: 'teacher', active: true })
         .sort({ firstName: 1 })
         .then((teachers) => {
           if (courseFromDatabase.teacher) {
             const teacherIndex = teachers.findIndex((element) => {
-              return element._id === courseFromDatabase.teacher;
+              return element.email === courseFromDatabase.teacher.email;
             });
             if (teacherIndex >= 0) {
               const foundTeacher = teachers[teacherIndex];
@@ -152,35 +152,56 @@ router.get('/:courseId', (req, res) => {
 router.post(
   '/:courseId/edit',
   fileUploader.single('courseImage'),
-  (req, res) => {
+  async (req, res) => {
     const {
+      courseCode,
       courseName,
       courseGrade,
       courseDescription,
       courseTeacher,
+      courseActive,
     } = req.body;
+
+    let activeCheck = true;
+    if (!courseActive) {
+      activeCheck = false;
+    }
 
     const { courseId } = req.params;
 
-    const editedCourse = {
-      name: courseName,
-      description: courseDescription,
-      grade: courseGrade,
-      teacher: courseTeacher,
-    };
-
-    if (req.file) {
-      editedCourse.image = req.file.path;
-    }
-
-    Course.findOneAndUpdate({ _id: courseId }, editedCourse)
-      .then(() => {
-        res.redirect('/courses/' + courseId);
-      })
-      .catch((error) => {
-        console.log('Error editing Course information ==>', error);
-        res.render('not-found');
+    try {
+      const preExistingCode = await Course.findOne({
+        code: courseCode,
+        _id: { $ne: courseId },
       });
+      if (preExistingCode) {
+        return res.redirect('./courses/' + courseId);
+      }
+
+      const editedCourse = {
+        code: courseCode,
+        name: courseName,
+        description: courseDescription,
+        grade: courseGrade,
+        teacher: courseTeacher,
+        active: activeCheck,
+      };
+
+      if (req.file) {
+        editedCourse.image = req.file.path;
+      }
+
+      await Course.findOneAndUpdate({ _id: courseId }, editedCourse)
+        .then(() => {
+          res.redirect('/courses/' + courseId);
+        })
+        .catch((error) => {
+          console.log('Error editing Course information ==>', error);
+          res.render('not-found');
+        });
+    } catch (error) {
+      console.log('Error in Course editing flow ===> ', error);
+    }
   }
 );
 

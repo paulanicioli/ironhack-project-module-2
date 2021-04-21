@@ -60,6 +60,14 @@
           {{/each}}
         </select>
       </div>
+      <div class="form-check form-switch">
+          <input class="form-check-input activation-toggle" type="checkbox" name="studentActive" 
+          {{#if student.active}}
+            checked
+          {{/if}}>
+          <label class="form-check-label" for="studentActive">Usuário 
+            <span>{{#if student.active}}{{else}}des{{/if}}ativad</span>o</label>
+      </div>
     </div>
         </div>
         <div class="modal-footer">

@@ -2,6 +2,7 @@
 <div class="content-container">
   <img class="content-img" src="{{course.image}}" alt="{{course.name}} image">
   <div>
+    <h5>Código: <span>{{course.code}}</span></h5>
     <h5>Descrição: <span>{{course.description}}</span></h5>
     <h5>Professor: <span>{{course.teacher.firstName}} {{course.teacher.lastName}}</span></h5>
     <h5>Email do professor: <span>{{course.teacher.email}}</span></h5>
@@ -23,18 +24,34 @@
         <h5 class="modal-title" id="editCourseLabel">Editar conteúdo de {{course.name}} do {{course.grade}}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="/courses/{{course._id}}/edit" method="post" enctype="multipart/form-data">
+      <form action="/courses/{{course._id}}/edit" method="post" class="px-4 py-3 needs-validation" enctype="multipart/form-data">
         <div class="modal-body">
           <div class="row g-3">
-            <div class="mb-3">
-              <label for="courseName">Nome do curso:</label>
-              <input type="text" class="form-control" placeholder="Curso" name="courseName" value="{{course.name}}">
+            <div class="col-md-6">
+              <label for="courseCode">Código da matéria:</label>
+              <input type="text" class="form-control 
+                {{#if codeError}}
+                  is-invalid
+                {{/if}}" placeholder="Exemplo: MAT408" name="courseCode" value="{{course.code}}">
+                {{#if codeError}}
+                  <div class="invalid-feedback">{{codeError}}</div>
+                {{/if}}
             </div>
-            <div class="mb-3">
+            <div class="col-md-6">
+              <label for="courseName">Nome da matéria:</label>
+              <input type="text" class="form-control 
+                {{#if nameError}}
+                  is-invalid
+                {{/if}}" placeholder="Exemplo: MAT408" name="courseName" value="{{course.name}}">
+                {{#if nameError}}
+                  <div class="invalid-feedback">{{nameError}}</div>
+                {{/if}}
+            </div>
+            <div class="mb-1">
               <label for="courseDescription">Descrição:</label>
-              <input type="text" class="form-control" placeholder="Descrição" name="courseDescription" value="{{course.description}}">
+              <textarea rows="3" type="text" class="form-control" name="courseDescription">{{course.description}}</textarea>
             </div>
-            <div class="mb-3" id="courseTeacherInput">
+            <div class="mb-1" id="courseTeacherInput">
         <label for="courseTeacher" class="form-label">Professor:</label>
         <select class="form-select" name="courseTeacher">
           {{#each teachers}}
@@ -42,16 +59,25 @@
           {{/each}}
         </select>
       </div>
-            <div class="mb-3">
-              <input type="file" class="form-control" placeholder="Foto do curso" name="courseImage">
-            </div>
-            <div class="mb-3" id="courseGradeInput">
-        <label for="courseGrade" class="form-label">Série do curso:</label>
-        <select class="form-select" name="courseGrade">
-          {{#each gradesValues}}
-            <option value={{this.value}}>{{this.text}}</option>
-          {{/each}}
-        </select>
+        <div class="mb-1">
+              <label for="courseImage">Imagem:</label>
+              <input type="file" class="form-control" name="courseImage">
+        </div>
+        <div class="mb-1" id="courseGradeInput">
+          <label for="courseGrade" class="form-label">Série do curso:</label>
+          <select class="form-select" name="courseGrade">
+            {{#each gradesValues}}
+              <option value={{this.value}}>{{this.text}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="form-check form-switch">
+          <input class="form-check-input activation-toggle" type="checkbox" name="courseActive" 
+          {{#if course.active}}
+            checked
+          {{/if}}>
+          <label class="form-check-label" for="courseActive">Matéria 
+            <span>{{#if course.active}}{{else}}des{{/if}}ativad</span>a</label>
       </div>
     </div>
         </div>

@@ -1,43 +1,50 @@
+<div class="input-form">
 <h1>Crie uma nova Conta Aluno:</h1>
 
-<form action="/new/student" method="post">
-  <div id="newUserForm">
+<form action="/new/student" method="post" class="px-4 py-3 needs-validation">
     <div class="row g-3">
-      <div class="col-md-12">
-        {{#if uniquenessError}}
-          <span class="text-danger">{{uniquenessError}}</span>
-        {{/if}}
-      </div>
       <div class="col-md-6">
-        <input type="text" class="form-control" placeholder="Nome" name="newUserFirstName" value={{newUserFirstName}}>
-      </div>
-      <div class="col-md-6">
-        <input type="text" class="form-control" placeholder="Sobrenome" name="newUserLastName" value={{newUserLastName}}>
-      </div>
-      <div class="col-md-6">
+        <label for="newUserFirstName">Nome do aluno:</label>
+        <input type="text" class="form-control
+          {{#if validationErrors.userFirstNameErrors}}
+            is-invalid
+          {{/if}}
+        " placeholder="Nome" name="newUserFirstName" value={{newUserFirstName}}>
         {{#if validationErrors.userFirstNameErrors}}
-          <span class="text-danger">{{validationErrors.userFirstNameErrors.[0]}}</span>
+           <div class="invalid-feedback">{{validationErrors.userFirstNameErrors.[0]}}</div>
         {{/if}}
       </div>
       <div class="col-md-6">
+        <label for="newUserLastName">Sobrenome do aluno:</label>
+        <input type="text" class="form-control
+          {{#if validationErrors.userLastNameErrors}}
+            is-invalid
+          {{/if}}
+        " placeholder="Sobrenome" name="newUserLastName" value={{newUserLastName}}>
         {{#if validationErrors.userLastNameErrors}}
-          <span class="text-danger">{{validationErrors.userLastNameErrors.[0]}}</span>
+          <div class="invalid-feedback">{{validationErrors.userLastNameErrors.[0]}}</div>
         {{/if}}
       </div>
       <div class="col-md-6">
-        <input type="email" class="form-control" placeholder="Email" name="newUserEmail" value={{newUserEmail}}>
-      </div>
-      <div class="col-md-6">
-        <input type="password" class="form-control" placeholder="Senha" name="newUserPassword">
-      </div>
-      <div class="col-md-6">
+        <label for="newUserEmail">Email:</label>
+        <input type="email" class="form-control
         {{#if validationErrors.userEmailErrors}}
-          <span class="text-danger">{{validationErrors.userEmailErrors.[0]}}</span>
+          is-invalid
+        {{/if}}
+        " placeholder="exemplo@escoladofuturo.com" name="newUserEmail" value={{newUserEmail}}>
+        {{#if validationErrors.userEmailErrors}}
+          <div class="invalid-feedback">{{validationErrors.userEmailErrors.[0]}}</div>
         {{/if}}
       </div>
       <div class="col-md-6">
+        <label for="newUserPassword">Senha:</label>
+        <input type="password" class="form-control
+          {{#if validationErrors.userPasswordErrors}}
+            is-invalid
+          {{/if}}
+        " placeholder="********" name="newUserPassword">
         {{#if validationErrors.userPasswordErrors}}
-          <span class="text-danger">{{validationErrors.userPasswordErrors.[0]}}</span>
+          <div class="invalid-feedback">{{validationErrors.userPasswordErrors.[0]}}</div>
         {{/if}}
       </div>
       <div class="mb-3" id="newStudentGradeInput">
@@ -48,11 +55,15 @@
           {{/each}}
         </select>
       </div>
-    </div>
-  </div>
-  <button type="submit" class="btn btn-primary">Salvar e enviar credenciais por email</button>
-</form>
+      <div class="form-check form-switch">
+        <input class="form-check-input activation-toggle" type="checkbox" name="newUserActive" checked>
+        <label class="form-check-label" for="newUserActive">Usuário <span>ativad</span>o</label>
+      </div>
 
+    <button type="submit" class="btn btn-primary">Salvar e enviar credenciais por email</button>
+  </div>
+</form>
+</div>
 
 {{!-- Completar signup:
 

@@ -6,7 +6,7 @@
   margin: 3vh 5vw;
 }
 
-#login-form {
+.input-form {
   position: relative;
   width: 50vw;
   left: 20vw;
@@ -45,4 +45,8 @@ h5 span {
 
 .content-container {
   display: flex;
+}
+
+.filter-icon {
+  margin-left: 10px;
 }

@@ -95,14 +95,20 @@ router.post(
       studentEmail,
       studentGrade,
       studentBirthDate,
+      studentActive,
     } = req.body;
 
+    let activeCheck = true;
+    if (!studentActive) {
+      activeCheck = false;
+    }
     const editedStudent = {
       firstName: studentFirstName,
       lastName: studentLastName,
       email: studentEmail,
       grade: studentGrade,
       birthDate: studentBirthDate,
+      active: activeCheck,
     };
 
     if (req.file) {

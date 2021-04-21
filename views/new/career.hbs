@@ -1,28 +1,41 @@
+<div class="input-form">
 <h1>Crie uma nova carreira:</h1>
 
-<form action="/new/career" method="post" enctype="multipart/form-data">
-  <div id="newCourseForm">
+<form action="/new/career" method="post" class="px-4 py-3 needs-validation" enctype="multipart/form-data">
     <div class="row g-3">
       <div class="mb-3">
-        <input type="text" class="form-control" placeholder="Nome da carreira" name="newCareerName" value={{newCareerName}}>
-      </div>
-      <div class="col-md-12">
+        <label for="newCareerName">Nome da carreira:</label>
+        <input type="text" class="form-control 
         {{#if nameError}}
-          <span class="text-danger">{{nameError}}</span>
+          is-invalid
+        {{/if}}"
+         placeholder="Exemplo: Medicina" name="newCareerName" value={{newCareerName}}>
+        {{#if nameError}}
+          <div class="invalid-feedback">{{nameError}}</div>
         {{/if}}
       </div>
       <div class="mb-3">
-        <input type="text" class="form-control" placeholder="Descrição da carreira" name="newCareerDescription" value={{newCareerDescription}}>
-      </div>
-      <div class="col-md-12">
+        <label for="newCareerDescription">Descrição da carreira:</label>
+        <textarea type="text" rows="4" class="form-control
         {{#if descriptionError}}
-          <span class="text-danger">{{descriptionError}}</span>
-        {{/if}}
+          is-invalid
+        {{/if}}"
+         placeholder="Exemplo: A pessoa que decide cursar Medicina, deve saber que existem muitas oportunidades no mercado de trabalho. Porém, o percentual de médicos espalhados pelo país nem sempre é equilibrado." name="newCareerDescription">{{newCareerDescription}}</textarea>
+         {{#if descriptionError}}
+            <div class="invalid-feedback">{{descriptionError}}</div>
+          {{/if}}
       </div>
-      <div class="mb-3">
-              <input type="file" class="form-control" placeholder="Foto do curso" name="careerImage">
-            </div>
-    </div>
+      <div class="col-md-2">
+          <label for="careerImage">Imagem:</label>
+      </div>
+      <div class="col-md-10">
+          <input type="file" class="form-control" placeholder="Foto do curso" name="careerImage">
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input activation-toggle" type="checkbox" name="newCareerActive" checked>
+        <label class="form-check-label" for="newCareerActive">Carreira <span>ativad</span>a</label>
+      </div>
+    <button type="submit" class="btn btn-primary">Salvar e disponibilizar carreira para acesso</button>
   </div>
-  <button type="submit" class="btn btn-primary">Salvar e disponibilizar carreira para acesso</button>
 </form>
+</div>

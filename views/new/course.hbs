@@ -1,60 +1,71 @@
+<div class="input-form">
 <h1>Crie uma nova matéria:</h1>
 
-<form action="/new/course" method="post" enctype="multipart/form-data">
-  <div id="newCourseForm">
+<form action="/new/course" method="post" enctype="multipart/form-data" class="px-4 py-3 needs-validation">
     <div class="row g-3">
       <div class="col-md-6">
         <label for="newCourseCode">Código da matéria:</label>
+        <input type="text" class="form-control 
+        {{#if codeError}}
+          is-invalid
+        {{/if}}" placeholder="Exemplo: MAT408" name="newCourseCode" value={{newCourseCode}}>
+        {{#if codeError}}
+          <div class="invalid-feedback">{{codeError}}</div>
+        {{/if}}
       </div>
       <div class="col-md-6">
-        <input type="text" class="form-control" placeholder="Código único da matéria" name="newCourseCode" value={{newCourseCode}}>
-      </div>
-       <div class="col-md-12">
-        {{#if uniquenessError}}
-          <span class="text-danger">{{uniquenessError}}</span>
-        {{/if}}
-      </div>
-      <div class="col-md-12">
-        {{#if codeError}}
-          <span class="text-danger">{{codeError}}</span>
-        {{/if}}
-      </div>
-      <div class="mb-3">
-        <input type="text" class="form-control" placeholder="Nome da matéria" name="newCourseName" value={{newCourseName}}>
-      </div>
-      <div class="col-md-12">
+        <label for="newCourseName">Nome da matéria:</label>
+        <input type="text" class="form-control
         {{#if nameError}}
-          <span class="text-danger">{{nameError}}</span>
+          is-invalid
+        {{/if}}
+        " placeholder="Exemplo: Matemática" name="newCourseName" value={{newCourseName}}>
+        {{#if nameError}}
+          <div class="invalid-feedback">{{nameError}}</div>
         {{/if}}
       </div>
       <div class="mb-3">
-        <input type="text" class="form-control" placeholder="Descrição da matéria" name="newCourseDescription" value={{newCourseDescription}}>
-      </div>
-      <div class="col-md-12">
+        <textarea rows="3" class="form-control
+          {{#if descriptionError}}
+          is-invalid
+          {{/if}}
+        " placeholder="Descrição da matéria" name="newCourseDescription">{{newCourseDescription}}</textarea>
         {{#if descriptionError}}
-          <span class="text-danger">{{descriptionError}}</span>
+          <div class="invalid-feedback">{{descriptionError}}</div>
         {{/if}}
       </div>
-      <div class="mb-3">
-              <input type="file" class="form-control"  name="courseImage">
-            </div>
-      <div class="mb-3" id="CourseTeacherInput">
-        <label for="newCourseTeacher" class="form-label">Professor:</label>
+      <div class="col-md-2">
+          <label for="courseImage">Imagem:</label>
+      </div>
+      <div class="col-md-10">
+          <input type="file" class="form-control"  name="courseImage">
+      </div>
+      <div class="col-md-2">
+          <label for="newCourseTeacher">Professor:</label>
+      </div>
+      <div class="col-md-10" id="CourseTeacherInput">
         <select class="form-select" name="newCourseTeacher">
           {{#each teachers}}
             <option value={{this._id}}>{{this.firstName}} {{this.lastName}}</option>
           {{/each}}
         </select>
       </div>
-      <div class="mb-3" id="CourseGradeInput">
-        <label for="newCourseGrade" class="form-label">Série da matéria:</label>
+      <div class="col-md-2">
+          <label for="newCourseGrade">Série:</label>
+      </div>
+      <div class="col-md-10" id="CourseGradeInput">
         <select class="form-select" name="newCourseGrade">
           {{#each gradesValues}}
             <option value={{this.value}}>{{this.text}}</option>
           {{/each}}
         </select>
       </div>
-    </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input activation-toggle" type="checkbox" name="newCourseActive" checked>
+        <label class="form-check-label" for="newCourseActive">Matéria <span>ativad</span>a</label>
+      </div>
+    
+    <button type="submit" class="btn btn-primary">Salvar e disponibilizar matéria para acesso</button>
   </div>
-  <button type="submit" class="btn btn-primary">Salvar e disponibilizar matéria para acesso</button>
 </form>
+</div>
