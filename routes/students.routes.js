@@ -92,7 +92,10 @@ router.get('/:studentId', async (req, res) => {
         });
     })
     .catch(() => {
-      res.render('not-found');
+      res.render('not-found', {
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
+      });
     });
 });
 
@@ -132,7 +135,10 @@ router.post(
         res.redirect('/students/' + studentId);
       })
       .catch(() => {
-        res.render('not-found');
+        res.render('not-found', {
+          currentUser: req.session.currentUser,
+          isTeacher: req.session.currentUser.role === 'teacher',
+        });
       });
   }
 );
@@ -145,7 +151,10 @@ router.post('/:studentId/delete', (req, res) => {
       res.redirect('/students/');
     })
     .catch(() => {
-      res.render('not-found');
+      res.render('not-found', {
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
+      });
     });
 });
 

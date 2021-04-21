@@ -60,7 +60,10 @@ router.get('/:parentId', async (req, res) => {
       });
     })
     .catch(() => {
-      res.render('not-found');
+      res.render('not-found', {
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
+      });
     });
 });
 
@@ -92,7 +95,10 @@ router.post(
         res.redirect('/parents/' + parentId);
       })
       .catch(() => {
-        res.render('not-found');
+        res.render('not-found', {
+          currentUser: req.session.currentUser,
+          isTeacher: req.session.currentUser.role === 'teacher',
+        });
       });
   }
 );
@@ -105,7 +111,10 @@ router.post('/:parentId/delete', (req, res) => {
       res.redirect('/parents/');
     })
     .catch(() => {
-      res.render('not-found');
+      res.render('not-found', {
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
+      });
     });
 });
 

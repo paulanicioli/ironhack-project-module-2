@@ -78,7 +78,10 @@ router.get('/:careerId', (req, res) => {
       });
     })
     .catch(() => {
-      res.render('not-found');
+      res.render('not-found', {
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
+      });
     });
 });
 
@@ -103,7 +106,10 @@ router.post(
         res.redirect(`/careers/${careerId}`);
       })
       .catch((error) => {
-        res.render('not-found');
+        res.render('not-found', {
+          currentUser: req.session.currentUser,
+          isTeacher: req.session.currentUser.role === 'teacher',
+        });
       });
   }
 );
@@ -117,7 +123,10 @@ router.post('/:careerId/delete', (req, res) => {
     })
     .catch((error) => {
       console.log('Error deleting career ==>', error);
-      res.render('not-found');
+      res.render('not-found', {
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
+      });
     });
 });
 

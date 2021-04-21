@@ -56,7 +56,10 @@ router.get('/', (req, res) => {
         console.log('There has been an error ==> ', error);
       });
   } else {
-    res.render('not-found');
+    res.render('not-found', {
+      currentUser: req.session.currentUser,
+      isTeacher: req.session.currentUser.role === 'teacher',
+    });
   }
 });
 
@@ -145,7 +148,10 @@ router.get('/:courseId', (req, res) => {
     })
     .catch((e) => {
       console.log('There has been an error finding the course ===> ', e);
-      res.render('not-found');
+      res.render('not-found', {
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
+      });
     });
 });
 
@@ -197,7 +203,10 @@ router.post(
         })
         .catch((error) => {
           console.log('Error editing Course information ==>', error);
-          res.render('not-found');
+          res.render('not-found', {
+            currentUser: req.session.currentUser,
+            isTeacher: req.session.currentUser.role === 'teacher',
+          });
         });
     } catch (error) {
       console.log('Error in Course editing flow ===> ', error);
@@ -214,7 +223,10 @@ router.post('/:courseId/delete', (req, res) => {
     })
     .catch((error) => {
       console.log('Error deleting course ==>', error);
-      res.render('not-found');
+      res.render('not-found', {
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
+      });
     });
 });
 

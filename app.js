@@ -67,7 +67,10 @@ app.use('/new', newRoutes);
 // catch 404 and render a not-found.hbs template
 app.use((req, res, next) => {
   res.status(404);
-  res.render('not-found', { layout: false });
+  res.render('not-found', {
+    currentUser: req.session.currentUser,
+    isTeacher: req.session.currentUser.role === 'teacher',
+  });
 });
 
 app.use((err, req, res, next) => {
@@ -75,7 +78,10 @@ app.use((err, req, res, next) => {
 
   if (!res.headersSent) {
     res.status(500);
-    res.render('error', { layout: false });
+    res.render('error', {
+      currentUser: req.session.currentUser,
+      isTeacher: req.session.currentUser.role === 'teacher',
+    });
   }
 });
 

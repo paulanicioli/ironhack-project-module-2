@@ -1,41 +1,41 @@
 <div class="input-form">
-<h1>Solicite a criação da sua conta:</h1>
+  <h1 class="section-title">Solicite a criação da sua conta:</h1>
 
-<p>Em breve, o nosso time de suporte vai te enviar as credenciais por email ;)</p>
+  <p>Em breve, o nosso time de suporte vai te enviar as credenciais por email ;)</p>
 
-<form action="/request-account" method="post" class="px-4 py-3 needs-validation">
+  <form action="/request-account" method="post" class="px-4 py-3 needs-validation">
     <div class="row g-3">
       <div class="mb-1">
-        <label for="requestUserType">Eu sou:</label>
+        <label for="requestUserType" class="me-5">Eu sou:</label>
         <div class="form-check form-check-inline">
           <input class="form-check-input" type="radio" name="requestUserType" id="requestUserType1" value="student" checked>
-          <label class="form-check-label" for="requestUserType1">
-            Aluno
+          <label class="form-check-label me-5"  for="requestUserType1">
+              Aluno
           </label>
         </div>
         <div class="form-check form-check-inline">
           <input class="form-check-input" type="radio" name="requestUserType" id="requestUserType2" value="parent">
-          <label class="form-check-label" for="requestUserType2">
-            Pai
+          <label class="form-check-label me-5" for="requestUserType2">
+              Pai
           </label>
         </div>
         <div class="form-check form-check-inline">
           <input class="form-check-input" type="radio" name="requestUserType" id="requestUserType3" value="teacher">
-          <label class="form-check-label" for="requestUserType3">
+          <label class="form-check-label me-5"  for="requestUserType3">
             Professor
           </label>
         </div>
-        </div>
-        <div class="col-md-6">
+      </div>
+      <div class="col-md-6">
         <label for="requestUserFirstName">Seu nome:</label>
         <input type="text" class="form-control
           {{#if validationErrors.userFirstNameErrors}}
-            is-invalid
+              is-invalid
           {{/if}}
-        " placeholder="Nome" name="requestUserFirstName" value={{requestUserFirstName}}>
-        {{#if validationErrors.userFirstNameErrors}}
-           <div class="invalid-feedback">{{validationErrors.userFirstNameErrors.[0]}}</div>
-        {{/if}}
+          " placeholder="Nome" name="requestUserFirstName" value={{requestUserFirstName}}>
+          {{#if validationErrors.userFirstNameErrors}}
+             <div class="invalid-feedback">{{validationErrors.userFirstNameErrors.[0]}}</div>
+          {{/if}}
       </div>
       <div class="col-md-6">
         <label for="requestUserLastName">Seu sobrenome:</label>
@@ -67,8 +67,7 @@
           {{/each}}
         </select>
       </div>
-
-    <button type="submit" class="btn btn-primary">Enviar solicitação</button>
-  </div>
-</form>
+      <button type="submit" class="btn btn-primary">Enviar solicitação</button>
+    </div>
+  </form>
 </div>
