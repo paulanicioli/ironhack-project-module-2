@@ -1,74 +1,238 @@
-<div class="input-form">
-  <h1 class="section-title">{{currentUser.firstName}} {{currentUser.lastName}}</h1>
-
-  <p>Em breve, o nosso time de suporte vai te enviar as credenciais por email ;)</p>
-
-  <form action="/my-profile" method="post" class="px-4 py-3 needs-validation">
-    <div class="row g-3">
-      <div class="mb-1">
-        <label for="requestUserType" class="me-5">Eu sou:</label>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="requestUserType" id="requestUserType1" value="student" checked>
-          <label class="form-check-label me-5"  for="requestUserType1">
-              Aluno
-          </label>
+<div class="container">
+    <div class="main-body">
+          <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-column align-items-center text-center">
+                    <img src={{currentUser.profilePicture}} alt="Admin" class="rounded-circle" width="250">
+                    <div class="mt-3">
+                      <h4>{{currentUser.firstName}} {{currentUser.lastName}}</h4>
+                      {{#if isStudent}}
+                        <p class="text-secondary mb-1">{{currentUser.grade}}</p>
+                      {{/if}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card mt-3">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-twitter mr-2 icon-inline text-info"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>Twitter</h6>
+                    <input class="form-control w-50 h-25" type="text" name="userInstagram" placeholder="escoladofuturo" value={{currentUser.twitter}}>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram mr-2 icon-inline text-danger"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>Instagram</h6>
+                    <input class="form-control w-50 h-25" type="text" name="userInstagram" placeholder="@escoladofuturo"value={{currentUser.instagram}}>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook mr-2 icon-inline text-primary"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>Facebook</h6>
+                    <input class="form-control w-50 h-25" type="text" name="userInstagram" placeholder="escola.do.futuro" value={{currentUser.facebook}}>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="card mb-3">
+                <form class="m-0 needs-validation" action="/my-profile" method="post">  
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-sm-3 d-flex align-items-center">
+                        <h6 class="mb-0">Nome</h6>
+                      </div>
+                      <div class="col-sm-4 text-secondary">
+                        <input type="text" class="form-control
+                        {{#if validationErrors.userFirstNameErrors}}
+                          is-invalid
+                        {{/if}}
+                        " name="userFirstName" value="{{userFirstName}}">
+                        {{#if validationErrors.userFirstNameErrors}}
+                          <div class="invalid-feedback">{{validationErrors.userFirstNameErrors.[0]}}</div>
+                        {{/if}}
+                      </div>
+                      <div class="col-sm-4 text-secondary">
+                        <input type="text" class="form-control
+                        {{#if validationErrors.userLastNameErrors}}
+                          is-invalid
+                        {{/if}}
+                        " name="userLastName" value="{{userLastName}}">
+                        {{#if validationErrors.userLastNameErrors}}
+                          <div class="invalid-feedback">{{validationErrors.userLastNameErrors.[0]}}</div>
+                        {{/if}}
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-sm-3 d-flex align-items-center">
+                        <h6 class="mb-0">Email</h6>
+                      </div>
+                      <div class="col-sm-9 text-secondary">
+                        <input class="form-control" type="email" name="userEmail" value="{{userEmail}}">
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-sm-3 d-flex align-items-center">
+                        <h6 class="mb-0">Gênero</h6>
+                      </div>
+                      <div class="col-sm-9 text-secondary">
+                        <select class="form-select" name="userGender">
+                          {{#each genderValues}}
+                            <option value="{{this.value}}">{{this.text}}</option>
+                          {{/each}}
+                        </select>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-sm-3 d-flex align-items-center">
+                        <h6 class="mb-0">Data de nascimento:</h6>
+                      </div>
+                      <div class="col-sm-9 text-secondary">
+                        <input class="form-control" type="date" name="userBirthDate" value="{{birthDateFormatted}}">
+                      </div>
+                    </div>
+                    {{#if isStudent}}
+                    <hr>
+                      <div class="row">
+                        <div class="col-sm-3 d-flex align-items-center">
+                          <h6 class="mb-0">Série</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                          <select class="form-select" name="userGrade">
+                          {{#each gradesValues}}
+                            <option value="{{this.value}}">{{this.text}}</option>
+                          {{/each}}
+                        </select>
+                        </div>
+                      </div>
+                    {{/if}}
+                    <div class="d-flex justify-content-between mt-2">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input newsletter-toggle" type="checkbox" name="userNewsletter" 
+                          {{#if currentUser.newsletterOptIn}}
+                            checked
+                          {{/if}}>
+                        <label class="form-check-label" for="userNewsletter">Você 
+                          <span>{{#if currentUser.newsletterOptIn}}{{else}}não {{/if}}</span>está inscrito na nossa newsletter!</label>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Salvar informações</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              {{#if isStudent}}
+                <div class="col-md-8">
+                  <h4>Pais cadastrados na plataforma:</h4>
+                </div>
+                {{#if parents}}
+                  <div class="row gutters-sm">
+                    {{#each parents}}
+                      <div class="col-sm-6 mb-3">
+                        <div class="card h-100">
+                          <div class="card-body">
+                            <a href="/parents/{{this._id}}" class="d-flex align-items-center mb-3">
+                              <img class="rounded-circle" width="90" src="{{this.profilePicture}}"    alt="Avatar">
+                              <h5 class="ms-3">{{this.firstName}} {{this.lastName}}
+                              </h5>
+                            </a>
+                            <div class="row">
+                              <div class="col-sm-3 d-flex align-items-center">
+                                <h6 class="mb-0">Email
+                                  </h6>
+                              </div>
+                              <div class="col-sm-9 text-secondary">
+                                {{this.email}}
+                              </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                              <div class="col-sm-3 d-flex align-items-center">
+                                <h6 class="mb-0">Gênero
+                                  </h6>
+                              </div>
+                              <div class="col-sm-9 text-secondary">
+                                {{this.gender}}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {{/each}}
+                  </div>
+                {{else}}
+                  <small>Até o momento não há nenhum pai cadastrado.</small>
+                {{/if}}
+              {{/if}}
+              {{#if isParent}}
+                <div class="col-md-8">
+                  <h4>Filhos cadastrados na plataforma:</h4>
+                </div>
+                {{#if children}}
+                  <div class="row gutters-sm">
+                    {{#each children}}
+                      <div class="col-sm-6 mb-3">
+                        <div class="card h-100">
+                          <div class="card-body">
+                            <a href="/students/{{this._id}}" class="d-flex align-items-center mb-3">
+                              <img class="rounded-circle" width="90" src="{{this.profilePicture}}"    alt="Avatar">
+                              <h5 class="ms-3">{{this.firstName}} {{this.lastName}}
+                              </h5>
+                            </a>
+                            <div class="row">
+                              <div class="col-sm-3 d-flex align-items-center">
+                                <h6 class="mb-0">Email
+                                  </h6>
+                              </div>
+                              <div class="col-sm-9 text-secondary">
+                                {{this.email}}
+                              </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                              <div class="col-sm-3 d-flex align-items-center">
+                                <h6 class="mb-0">Série
+                                  </h6>
+                              </div>
+                              <div class="col-sm-9 text-secondary">
+                                {{this.grade}}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {{/each}}
+                  </div>
+                {{else}}
+                  <small>Até o momento não há nenhum filho cadastrado.</small>
+                {{/if}}
+              {{/if}}
+            </div>
+          </div>
         </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="requestUserType" id="requestUserType2" value="parent">
-          <label class="form-check-label me-5" for="requestUserType2">
-              Pai
-          </label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="requestUserType" id="requestUserType3" value="teacher">
-          <label class="form-check-label me-5"  for="requestUserType3">
-            Professor
-          </label>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <label for="requestUserFirstName">Seu nome:</label>
-        <input type="text" class="form-control
-          {{#if validationErrors.userFirstNameErrors}}
-              is-invalid
-          {{/if}}
-          " placeholder="Nome" name="requestUserFirstName" value={{requestUserFirstName}}>
-          {{#if validationErrors.userFirstNameErrors}}
-             <div class="invalid-feedback">{{validationErrors.userFirstNameErrors.[0]}}</div>
-          {{/if}}
-      </div>
-      <div class="col-md-6">
-        <label for="requestUserLastName">Seu sobrenome:</label>
-        <input type="text" class="form-control
-          {{#if validationErrors.userLastNameErrors}}
-            is-invalid
-          {{/if}}
-        " placeholder="Sobrenome" name="requestUserLastName" value={{requestUserLastName}}>
-        {{#if validationErrors.userLastNameErrors}}
-          <div class="invalid-feedback">{{validationErrors.userLastNameErrors.[0]}}</div>
-        {{/if}}
-      </div>
-      <div class="mb-1">
-        <label for="requestUserEmail">Seu email:</label>
-        <input type="email" class="form-control
-        {{#if validationErrors.userEmailErrors}}
-          is-invalid
-        {{/if}}
-        " placeholder="exemplo@escoladofuturo.com" name="requestUserEmail" value={{requestUserEmail}}>
-        {{#if validationErrors.userEmailErrors}}
-          <div class="invalid-feedback">{{validationErrors.userEmailErrors.[0]}}</div>
-        {{/if}}
-      </div>
-      <div class="mb-3" id="requestStudentGradeInput">
-        <label for="requestUserGrade" class="form-label">Sua série:</label>
-        <select class="form-select" name="requestUserGrade">
-          {{#each gradesValues}}
-            <option value={{this.value}}>{{this.text}}</option>
-          {{/each}}
-        </select>
-      </div>
-
-      <button type="submit" class="btn btn-primary">Enviar solicitação</button>
     </div>
-  </form>
+
+<div class="toast-container position-absolute p-3" id="toastPlacement">
+  <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <img src="..." class="rounded me-2" alt="...">
+      <strong class="me-auto">Escola do Futuro</strong>
+      <small>Agora</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      Seu perfil foi atualizado com sucesso!
+    </div>
+  </div>
 </div>
+
+<script >
+  document.querySelector('.newsletter-toggle').addEventListener('click', () => {
+    const newsletterCheck = document.querySelector('.newsletter-toggle');
+    if (newsletterCheck.checked) {
+      newsletterCheck.parentNode.querySelector('label span').innerHTML = '';
+    } else {
+      newsletterCheck.parentNode.querySelector('label span').innerHTML = 'não ';
+    }
+  });
+</script>

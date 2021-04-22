@@ -13,6 +13,11 @@ const variables = {
     { value: '2EM', text: '2° ano do Ensino Médio', order: 11 },
     { value: '3EM', text: '3° ano do Ensino Médio', order: 12 },
   ],
+  genderValues: [
+    { value: 'female', text: 'Feminino' },
+    { value: 'male', text: 'Masculino' },
+    { value: 'non-binary', text: 'Não binário' },
+  ],
 };
 
 module.exports = variables;

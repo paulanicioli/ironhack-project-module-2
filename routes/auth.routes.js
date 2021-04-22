@@ -1,4 +1,5 @@
 const express = require('express');
+const { format } = require('date-format-parse');
 
 const router = express();
 
@@ -10,7 +11,10 @@ const bcrypt = require('bcrypt');
 
 const { validateSignup } = require('../validation/validations');
 
-const { gradesValues } = require('../public/javascripts/dataComponents');
+const {
+  gradesValues,
+  genderValues,
+} = require('../public/javascripts/dataComponents');
 
 const fileUploader = require('../config/cloudinary.config');
 
@@ -148,7 +152,9 @@ router.post('/request-account', async (req, res) => {
 });
 
 router.get('/confirm/', (req, res) => {
-  if (!req.session.currentUser || !req.session.currentUser.first_login) {
+  if (!req.session.currentUser) {
+    return res.render('login');
+  } else if (!req.session.currentUser.first_login) {
     return res.render('not-found', {
       currentUser: req.session.currentUser,
     });
@@ -227,8 +233,9 @@ router.post(
         confirmedUser.newsletterOptIn = false;
       }
 
-      await User.findByIdAndUpdate(userId, confirmedUser)
-        .then(() => {
+      await User.findByIdAndUpdate(userId, confirmedUser, { new: true })
+        .then((updatedUser) => {
+          req.session.currentUser = updatedUser;
           switch (req.session.currentUser.role) {
             case 'student':
               res.redirect('/courses/');
@@ -253,19 +260,130 @@ router.post(
 );
 
 router.get('/my-profile/', (req, res) => {
-  if (!req.session.currentUser || !req.session.currentUser.first_login) {
-    return res.render('not-found', {
-      currentUser: req.session.currentUser,
-    });
+  if (!req.session.currentUser) {
+    return res.render('login');
   } else {
+    if (req.session.currentUser.gender) {
+      const genderIndex = genderValues.findIndex((element) => {
+        return element.value === req.session.currentUser.gender;
+      });
+      const foundGenderValue = genderValues[genderIndex];
+
+      genderValues.splice(genderIndex, 1);
+
+      genderValues.unshift(foundGenderValue);
+    }
+
+    if (req.session.currentUser.grade) {
+      const gradeIndex = gradesValues.findIndex((element) => {
+        return element.value === req.session.currentUser.grade;
+      });
+      const foundGradeValue = gradesValues[gradeIndex];
+
+      gradesValues.splice(gradeIndex, 1);
+
+      gradesValues.unshift(foundGradeValue);
+    }
+
+    const birthDateFormatted = format(
+      req.session.currentUser.birthDate,
+      'YYYY-MM-DD'
+    );
+
     res.render('./accounts/my-profile', {
       currentUser: req.session.currentUser,
-      isTeacher: req.session.currentUser.role === 'teacher',
+      gradesValues,
+      genderValues,
+      birthDateFormatted,
       userFirstName: req.session.currentUser.firstName,
       userLastName: req.session.currentUser.lastName,
       userEmail: req.session.currentUser.email,
+      isTeacher: req.session.currentUser.role === 'teacher',
+      isStudent: req.session.currentUser.role === 'student',
+      isParent: req.session.currentUser.role === 'parent',
     });
   }
+});
+
+router.post('/my-profile', (req, res) => {
+  const {
+    userFirstName,
+    userLastName,
+    userEmail,
+    userBirthDate,
+    userGender,
+    userGrade,
+    userNewsletter,
+  } = req.body;
+  const validationErrors = {};
+  if (!userFirstName) {
+    validationErrors.userFirstNameErrors = ['Campo obrigatório!'];
+  }
+
+  if (!userLastName) {
+    validationErrors.userLastNameErrors = ['Campo obrigatório!'];
+  }
+
+  if (Object.keys(validationErrors).length > 0) {
+    if (userGender) {
+      const genderIndex = genderValues.findIndex((element) => {
+        return element.value === userGender;
+      });
+      const foundGenderValue = genderValues[genderIndex];
+
+      genderValues.splice(genderIndex, 1);
+
+      genderValues.unshift(foundGenderValue);
+    }
+
+    if (userGrade) {
+      const gradeIndex = gradesValues.findIndex((element) => {
+        return element.value === userGrade;
+      });
+      const foundGradeValue = gradesValues[gradeIndex];
+
+      gradesValues.splice(gradeIndex, 1);
+
+      gradesValues.unshift(foundGradeValue);
+    }
+
+    const birthDateFormatted = format(userBirthDate, 'YYYY-MM-DD');
+
+    return res.render('./accounts/my-profile', {
+      validationErrors,
+      birthDateFormatted,
+      gradesValues,
+      genderValues,
+      userFirstName,
+      userLastName,
+      userEmail,
+      currentUser: req.session.currentUser,
+      isTeacher: req.session.currentUser.role === 'teacher',
+      isStudent: req.session.currentUser.role === 'student',
+      isParent: req.session.currentUser.role === 'parent',
+    });
+  }
+  const editedUser = {
+    firstName: userFirstName,
+    lastName: userLastName,
+    email: userEmail,
+    gender: userGender,
+    birthDate: userBirthDate,
+    newsletterOptIn: true,
+  };
+
+  if (!userNewsletter) {
+    editedUser.newsletterOptIn = false;
+  }
+
+  User.findByIdAndUpdate(req.session.currentUser._id, editedUser, { new: true })
+    .then((updatedUser) => {
+      req.session.currentUser = updatedUser;
+      res.redirect('/my-profile/');
+    })
+    .catch((e) => {
+      console.log('There has been an error in the My Profile page ===> ', e);
+    });
 });
 
 module.exports = router;

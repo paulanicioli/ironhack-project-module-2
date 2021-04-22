@@ -77,12 +77,10 @@
 
 <script >
   document.querySelector('.newsletter-toggle').addEventListener('click', () => {
-    console.log('Evento ativado!');
     const newsletterCheck = document.querySelector('.newsletter-toggle');
     if (newsletterCheck.checked) {
       newsletterCheck.parentNode.querySelector('label span').innerHTML = 'Q';
     } else {
-      console.log('desativado!');
       newsletterCheck.parentNode.querySelector('label span').innerHTML = 'Não q';
     }
   });
