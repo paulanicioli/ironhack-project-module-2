@@ -12,6 +12,8 @@ const { validateSignup } = require('../validation/validations');
 
 const { gradesValues } = require('../public/javascripts/dataComponents');
 
+const fileUploader = require('../config/cloudinary.config');
+
 router.get('/login', (req, res) => {
   res.render('login');
 });
@@ -46,16 +48,16 @@ router.post('/login', async (req, res) => {
     req.session.currentUser = userFromDb;
 
     // Redirecionar para diferentes páginas dependendo do tipo de usuário
-
-    switch (userFromDb.role) {
-      case 'teacher':
-        res.redirect('/students/');
-        break;
-      case 'parent':
-        res.redirect('/students/');
-        break;
-      default:
-        res.redirect('/courses/');
+    if (userFromDb.first_login) {
+      return res.redirect('/confirm');
+    } else {
+      switch (userFromDb.role) {
+        case 'student':
+          res.redirect('/courses/');
+          break;
+        default:
+          res.redirect('/students/');
+      }
     }
   } catch (error) {
     console.log('Error in the login route ===> ', error);
@@ -69,7 +71,7 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/request-account', (req, res) => {
-  res.render('request-account', {
+  res.render('.accounts/request', {
     gradesValues,
   });
 });
@@ -90,7 +92,7 @@ router.post('/request-account', async (req, res) => {
   );
 
   if (Object.keys(validationErrors).length > 0) {
-    return res.render('request-account', {
+    return res.render('./accounts/request', {
       validationErrors,
       requestUserFirstName,
       requestUserLastName,
@@ -106,7 +108,7 @@ router.post('/request-account', async (req, res) => {
       validationErrors.userEmailErrors = [
         'Erro! Este usuário já está cadastrado!',
       ];
-      return res.render('request-account', {
+      return res.render('./accounts/request', {
         validationErrors,
         requestUserFirstName,
         requestUserLastName,
@@ -127,7 +129,7 @@ router.post('/request-account', async (req, res) => {
 
     await User.create(newRequestUser)
       .then(() => {
-        res.render('request-account-successful', {
+        res.render('./accounts/request-successful', {
           requestUserEmail,
         });
       })
@@ -142,6 +144,127 @@ router.post('/request-account', async (req, res) => {
       'There has been an error trying to request a new account ===> ',
       error
     );
+  }
+});
+
+router.get('/confirm/', (req, res) => {
+  if (!req.session.currentUser || !req.session.currentUser.first_login) {
+    return res.render('not-found', {
+      currentUser: req.session.currentUser,
+    });
+  } else {
+    res.render('./accounts/confirm', {
+      currentUser: req.session.currentUser,
+      isTeacher: req.session.currentUser.role === 'teacher',
+      userFirstName: req.session.currentUser.firstName,
+      userLastName: req.session.currentUser.lastName,
+      userEmail: req.session.currentUser.email,
+    });
+  }
+});
+
+router.post(
+  '/confirm/:userId',
+  fileUploader.single('userProfilePicture'),
+  async (req, res) => {
+    const { userId } = req.params;
+
+    if (userId !== req.session.currentUser._id) {
+      return res.render('not-found', {
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
+      });
+    }
+
+    const {
+      userFirstName,
+      userLastName,
+      userEmail,
+      userPassword,
+      userBirthDate,
+      userGender,
+      userNewsletter,
+    } = req.body;
+
+    const validationErrors = validateSignup(
+      userFirstName,
+      userLastName,
+      userEmail,
+      userPassword
+    );
+
+    if (Object.keys(validationErrors).length > 0) {
+      return res.render('./accounts/confirm', {
+        validationErrors,
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
+        userFirstName,
+        userLastName,
+        userEmail,
+      });
+    }
+    try {
+      const saltRounds = 10;
+      const salt = bcrypt.genSaltSync(saltRounds);
+      const encryptedPassword = bcrypt.hashSync(userPassword, salt);
+
+      const confirmedUser = {
+        firstName: userFirstName,
+        lastName: userLastName,
+        email: userEmail,
+        password: encryptedPassword,
+        gender: userGender,
+        birthDate: userBirthDate,
+        newsletterOptIn: true,
+        first_login: false,
+      };
+
+      if (req.file) {
+        confirmedUser.profilePicture = req.file.path;
+      }
+
+      if (!userNewsletter) {
+        confirmedUser.newsletterOptIn = false;
+      }
+
+      await User.findByIdAndUpdate(userId, confirmedUser)
+        .then(() => {
+          switch (req.session.currentUser.role) {
+            case 'student':
+              res.redirect('/courses/');
+              break;
+            default:
+              res.redirect('/students/');
+          }
+        })
+        .catch((e) => {
+          console.log(
+            'There has been an error trying to post confirmation page ===> ',
+            e
+          );
+        });
+    } catch (error) {
+      console.log(
+        'There has been an error trying to post confirmation page ===> ',
+        error
+      );
+    }
+  }
+);
+
+router.get('/my-profile/', (req, res) => {
+  if (!req.session.currentUser || !req.session.currentUser.first_login) {
+    return res.render('not-found', {
+      currentUser: req.session.currentUser,
+    });
+  } else {
+    res.render('./accounts/my-profile', {
+      currentUser: req.session.currentUser,
+      isTeacher: req.session.currentUser.role === 'teacher',
+      userFirstName: req.session.currentUser.firstName,
+      userLastName: req.session.currentUser.lastName,
+      userEmail: req.session.currentUser.email,
+    });
   }
 });
 

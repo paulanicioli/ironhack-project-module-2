@@ -1,13 +1,3 @@
-document.querySelector('.activation-toggle').addEventListener('click', () => {
-  const activationCheck = document.querySelector('.activation-toggle');
-  if (activationCheck.checked) {
-    activationCheck.parentNode.querySelector('label span').innerHTML = 'ativad';
-  } else {
-    activationCheck.parentNode.querySelector('label span').innerHTML =
-      'desativad';
-  }
-});
-
 // Edits displayed fields in User Creation form depending on their role
 
 // document.getElementById('newUserRole').addEventListener('input', (event) => {

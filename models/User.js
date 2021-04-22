@@ -10,7 +10,7 @@ const userSchema = new Schema(
     profilePicture: {
       type: String,
       default:
-        'https://res.cloudinary.com/de4qbzjqh/image/upload/v1618884657/iron-pets-images-repo/file_kfvl7y.jpg',
+        'https://res.cloudinary.com/de4qbzjqh/image/upload/v1619089775/escola-do-futuro/female-avatar_zdwbnp.jpg',
     },
     grade: {
       type: String,
@@ -42,6 +42,10 @@ const userSchema = new Schema(
     children: { type: [Schema.Types.ObjectId], ref: 'User' },
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
     first_login: { type: Boolean, default: true },
+    gender: {
+      type: String,
+      enum: ['male', 'female', 'non-binary'],
+    },
   },
   {
     timestamps: true,

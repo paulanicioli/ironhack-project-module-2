@@ -1,16 +1,15 @@
 <h1>Carreiras</h1>
+<div class="d-flex justify-content-between">
+    {{#if isTeacher}}
+        <a href="/new/career"><button class="btn btn-primary">Criar nova carreira</button></a>
+    {{/if}}
 
-{{#if isTeacher}}
-<div class="d-flex justify-content-around">
-<a href="/new/career"><button class="btn btn-primary">Criar nova carreira</button></a>
-{{/if}}
-
-<form action="/careers" method="post">
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" name="careerName" placeholder="Nome da carreira">
-        <button type="submit" class="btn btn-primary">Buscar Carreira</button>
-    </div>
-</form>
+    <form action="/careers" method="post">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="careerName" placeholder="Nome da carreira">
+            <button type="submit" class="btn btn-primary">Buscar Carreira</button>
+        </div>
+    </form>
 </div>
 
 

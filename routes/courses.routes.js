@@ -23,11 +23,12 @@ router.get('/', (req, res) => {
         const teachers = courses.map((element) => {
           return element.teacher;
         });
-        console.log([...new Set(teachers)]);
+        const uniqueTeachers = [...new Set(teachers)];
         res.render('./courses/courses', {
           courses,
           currentUser: req.session.currentUser,
           gradesValues,
+          teachers: uniqueTeachers,
         });
       })
       .catch((error) => {

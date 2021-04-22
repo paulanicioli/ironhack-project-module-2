@@ -11,7 +11,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'iron-pets-images-repo',
+    folder: 'escola-do-futuro',
     resource_type: 'image',
     allowed_formast: ['jpg', 'png', 'jpeg'],
     use_filename: true,

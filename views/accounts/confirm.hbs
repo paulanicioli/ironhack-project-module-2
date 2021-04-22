@@ -1,0 +1,89 @@
+<div class="input-form">
+<h1 class="section-title">Bem-vindo! Confirme suas informações:</h1>
+<p>Este é seu primeiro login! Verifique suas informações pessoais abaixo.</p>
+
+<form action="/confirm/{{currentUser._id}}" method="post" enctype="multipart/form-data" class="px-4 py-3 needs-validation">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="userFirstName">Nome:</label>
+        <input type="text" class="form-control
+          {{#if validationErrors.userFirstNameErrors}}
+            is-invalid
+          {{/if}}
+        " placeholder="Nome" name="userFirstName" value={{userFirstName}}>
+        {{#if validationErrors.userFirstNameErrors}}
+           <div class="invalid-feedback">{{validationErrors.userFirstNameErrors.[0]}}</div>
+        {{/if}}
+      </div>
+      <div class="col-md-6">
+        <label for="userLastName">Sobrenome:</label>
+        <input type="text" class="form-control
+          {{#if validationErrors.userLastNameErrors}}
+            is-invalid
+          {{/if}}
+        " placeholder="Sobrenome" name="userLastName" value={{userLastName}}>
+        {{#if validationErrors.userLastNameErrors}}
+          <div class="invalid-feedback">{{validationErrors.userLastNameErrors.[0]}}</div>
+        {{/if}}
+      </div>
+      <div class="col-md-6">
+        <label for="userEmail">Email:</label>
+        <input type="email" class="form-control
+        {{#if validationErrors.userEmailErrors}}
+          is-invalid
+        {{/if}}
+        " placeholder="exemplo@escoladofuturo.com" name="userEmail" value={{userEmail}}>
+        {{#if validationErrors.userEmailErrors}}
+          <div class="invalid-feedback">{{validationErrors.userEmailErrors.[0]}}</div>
+        {{/if}}
+      </div>
+      <div class="col-md-6">
+        <label for="userPassword">Escolha uma nova senha:</label>
+        <input type="password" class="form-control
+          {{#if validationErrors.userPasswordErrors}}
+            is-invalid
+          {{/if}}
+        " placeholder="********" name="userPassword">
+        {{#if validationErrors.userPasswordErrors}}
+          <div class="invalid-feedback">{{validationErrors.userPasswordErrors.[0]}}</div>
+        {{/if}}
+      </div>
+      <div class="col-md-6">
+        <label for="userBirthDate">Data de nascimento:</label>
+        <input type="date" class="form-control" placeholder="2000-01-01" name="userBirthDate">
+      </div>
+      <div class="col-md-6">
+        <label for="userGender">Gênero:</label>
+        <select class="form-select" name="userGender">
+            <option value="female">Feminino</option>
+            <option value="male">Masculino</option>
+            <option value="non-binary">Não binário</option>
+        </select>
+      </div>
+      <div class="mb-1">
+        <label for="userProfilePicture">Sua foto de perfil:</label>
+        <input type="file" name="userProfilePicture">
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input newsletter-toggle" type="checkbox" name="userNewsletter" checked>
+        <label class="form-check-label" for="userNewsletter">
+          <span>Q</span>uero me inscrever na newsletter da Escola do Futuro</label>
+      </div>
+
+    <button type="submit" class="btn btn-primary">Confirmar</button>
+  </div>
+</form>
+</div>
+
+<script >
+  document.querySelector('.newsletter-toggle').addEventListener('click', () => {
+    console.log('Evento ativado!');
+    const newsletterCheck = document.querySelector('.newsletter-toggle');
+    if (newsletterCheck.checked) {
+      newsletterCheck.parentNode.querySelector('label span').innerHTML = 'Q';
+    } else {
+      console.log('desativado!');
+      newsletterCheck.parentNode.querySelector('label span').innerHTML = 'Não q';
+    }
+  });
+</script>

@@ -17,7 +17,7 @@ const { gradesValues } = require('../public/javascripts/dataComponents');
 const fileUploader = require('../config/cloudinary.config');
 
 router.get('/student', (req, res) => {
-  res.render('./new/student', {
+  res.render('./students/new', {
     gradesValues,
     currentUser: req.session.currentUser,
     isTeacher: req.session.currentUser.role === 'teacher',
@@ -57,7 +57,7 @@ router.post('/student', async (req, res) => {
   }
 
   if (Object.keys(validationErrors).length > 0) {
-    return res.render('./new/student', {
+    return res.render('./students/new', {
       validationErrors,
       currentUser: req.session.currentUser,
       isTeacher: req.session.currentUser.role === 'teacher',
@@ -74,7 +74,7 @@ router.post('/student', async (req, res) => {
       validationErrors.userEmailErrors = [
         'Erro! Este usuário já está cadastrado!',
       ];
-      return res.render('./new/student', {
+      return res.render('./students/new', {
         validationErrors,
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
@@ -125,7 +125,7 @@ router.get('/parent', (req, res) => {
       const sortedStudentList = studentsFromDB.sort(
         (a, b) => a.grade_order - b.grade_order
       );
-      res.render('./new/parent', {
+      res.render('./parents/new', {
         currentUser: req.session.currentUser,
         studentId: req.query.studentId,
         isTeacher: req.session.currentUser.role === 'teacher',
@@ -164,7 +164,7 @@ router.post('/parent', async (req, res) => {
   );
 
   if (Object.keys(validationErrors).length > 0) {
-    return res.render('./new/parent', {
+    return res.render('./parents/new', {
       validationErrors,
       currentUser: req.session.currentUser,
       isTeacher: req.session.currentUser.role === 'teacher',
@@ -180,7 +180,7 @@ router.post('/parent', async (req, res) => {
       validationErrors.userEmailErrors = [
         'Erro! Este usuário já está cadastrado!',
       ];
-      return res.render('./new/parent', {
+      return res.render('./parents/new', {
         validationErrors,
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
@@ -227,7 +227,7 @@ router.get('/course', (req, res) => {
   User.find({ role: 'teacher' })
     .sort({ firstName: 1 })
     .then((teachers) => {
-      res.render('./new/course', {
+      res.render('./courses/new', {
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
         teachers,
@@ -260,7 +260,7 @@ router.post('/course', fileUploader.single('courseImage'), async (req, res) => {
       console.log('There has been an error while finding teachers ===> ', e);
     });
   if (!newCourseName || !newCourseDescription || !newCourseCode) {
-    return res.render('./new/course', {
+    return res.render('./courses/new', {
       codeError: newCourseCode
         ? null
         : 'Campo obrigatório! Escolha um campo único',
@@ -278,7 +278,7 @@ router.post('/course', fileUploader.single('courseImage'), async (req, res) => {
   try {
     const courseFromDb = await Course.findOne({ code: newCourseCode });
     if (courseFromDb) {
-      return res.render('./new/course', {
+      return res.render('./courses/new', {
         codeError: 'Erro! Este código já existe!',
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
@@ -310,7 +310,7 @@ router.post('/course', fileUploader.single('courseImage'), async (req, res) => {
 });
 
 router.get('/career', (req, res) => {
-  res.render('./new/career', {
+  res.render('./careers/new', {
     currentUser: req.session.currentUser,
     isTeacher: req.session.currentUser.role === 'teacher',
   });
@@ -320,7 +320,7 @@ router.post('/career', fileUploader.single('careerImage'), async (req, res) => {
   const { newCareerName, newCareerDescription } = req.body;
 
   if (!newCareerName || !newCareerDescription) {
-    return res.render('./new/career', {
+    return res.render('./careers/new', {
       nameError: newCareerName ? null : 'Campo obrigatório!',
       descriptionError: newCareerDescription ? null : 'Campo obrigatório!',
       currentUser: req.session.currentUser,

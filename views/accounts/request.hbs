@@ -1,0 +1,74 @@
+<div class="input-form">
+  <h1 class="section-title">Solicite a criação da sua conta:</h1>
+
+  <p>Em breve, o nosso time de suporte vai te enviar as credenciais por email ;)</p>
+
+  <form action="/request-account" method="post" class="px-4 py-3 needs-validation">
+    <div class="row g-3">
+      <div class="mb-1">
+        <label for="requestUserType" class="me-5">Eu sou:</label>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="requestUserType" id="requestUserType1" value="student" checked>
+          <label class="form-check-label me-5"  for="requestUserType1">
+              Aluno
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="requestUserType" id="requestUserType2" value="parent">
+          <label class="form-check-label me-5" for="requestUserType2">
+              Pai
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="requestUserType" id="requestUserType3" value="teacher">
+          <label class="form-check-label me-5"  for="requestUserType3">
+            Professor
+          </label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label for="requestUserFirstName">Seu nome:</label>
+        <input type="text" class="form-control
+          {{#if validationErrors.userFirstNameErrors}}
+              is-invalid
+          {{/if}}
+          " placeholder="Nome" name="requestUserFirstName" value={{requestUserFirstName}}>
+          {{#if validationErrors.userFirstNameErrors}}
+             <div class="invalid-feedback">{{validationErrors.userFirstNameErrors.[0]}}</div>
+          {{/if}}
+      </div>
+      <div class="col-md-6">
+        <label for="requestUserLastName">Seu sobrenome:</label>
+        <input type="text" class="form-control
+          {{#if validationErrors.userLastNameErrors}}
+            is-invalid
+          {{/if}}
+        " placeholder="Sobrenome" name="requestUserLastName" value={{requestUserLastName}}>
+        {{#if validationErrors.userLastNameErrors}}
+          <div class="invalid-feedback">{{validationErrors.userLastNameErrors.[0]}}</div>
+        {{/if}}
+      </div>
+      <div class="mb-1">
+        <label for="requestUserEmail">Seu email:</label>
+        <input type="email" class="form-control
+        {{#if validationErrors.userEmailErrors}}
+          is-invalid
+        {{/if}}
+        " placeholder="exemplo@escoladofuturo.com" name="requestUserEmail" value={{requestUserEmail}}>
+        {{#if validationErrors.userEmailErrors}}
+          <div class="invalid-feedback">{{validationErrors.userEmailErrors.[0]}}</div>
+        {{/if}}
+      </div>
+      <div class="mb-3" id="requestStudentGradeInput">
+        <label for="requestUserGrade" class="form-label">Sua série:</label>
+        <select class="form-select" name="requestUserGrade">
+          {{#each gradesValues}}
+            <option value={{this.value}}>{{this.text}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Enviar solicitação</button>
+    </div>
+  </form>
+</div>
