@@ -18,7 +18,7 @@
     <nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
-                <img src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                <img src="images/logo.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
                 Escola do Futuro
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,12 +27,19 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                 <ul class="navbar-nav me-5 mb-lg-0 d-flex align-items-center">
                     {{#if currentUser}}
+                        {{#if isStudent}}
                         <li class="nav-item mx-3">
                             <a class="nav-link" href="/courses">Matérias</a>
                         </li>
                         <li class="nav-item mx-3">
                             <a class="nav-link" href="/careers">Carreiras</a>
                         </li>
+                        {{/if}}
+                        {{#if isParent}}
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="/children">Meus filhos</a>
+                        </li>
+                        {{/if}}
                         {{#if isTeacher}}
                             <li class="nav-item mx-3">
                                 <a class="nav-link" href="/students">Alunos</a>

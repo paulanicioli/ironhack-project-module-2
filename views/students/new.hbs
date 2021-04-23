@@ -3,6 +3,11 @@
 
 <form action="/new/student" method="post" class="px-4 py-3 needs-validation">
     <div class="row g-3">
+      {{#if newStudentParent}}
+      <div class="d-none">
+        <input type="text" class="form-control" name="newUserParent" value={{newStudentParent}}>
+      </div>
+      {{/if}}
       <div class="col-md-6">
         <label for="newUserFirstName">Nome do aluno:</label>
         <input type="text" class="form-control
@@ -64,21 +69,3 @@
   </div>
 </form>
 </div>
-
-{{!-- Completar signup:
-
-
- <div class="mb-3">
-    <label for="userProfilePicture" class="form-label">Escolha sua foto de perfil:</label>
-    <input type="file" class="form-control" id="userProfilePicture">
-    </div>
-  <div class="mb-3 form-check">
-    <input type="checkbox" class="form-check-input" id="userNewsletterOptIn">
-    <label class="form-check-label" for="userNewsletterOptIn">Quero receber a newsletter semanal da Escola do Futuro.</label>
-  </div>
-  <div class="mb-3">
-    <label for="userBirthDate" class="form-label">Data de nascimento:</label>
-    <input type="date" class="form-control" id="userLastName">
-    </div>
-
- --}}

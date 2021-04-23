@@ -55,24 +55,28 @@
                     </div>
                   </div>
                   <hr>
-                  <div class="row">
-                    <div class="col-sm-3 d-flex align-items-center">
-                      <h6 class="mb-0">Gênero</h6>
+                  {{#if student.gender}}
+                    <div class="row">
+                      <div class="col-sm-3 d-flex align-items-center">
+                        <h6 class="mb-0">Gênero</h6>
+                      </div>
+                      <div class="col-sm-9 text-secondary">
+                        {{student.gender}}
+                      </div>
                     </div>
-                    <div class="col-sm-9 text-secondary">
-                      {{student.gender}}
-                    </div>
-                  </div>
                   <hr>
-                  <div class="row">
-                    <div class="col-sm-3 d-flex align-items-center">
-                      <h6 class="mb-0">Data de nascimento:</h6>
+                  {{/if}}
+                  {{#if student.birthDate}}
+                    <div class="row">
+                      <div class="col-sm-3 d-flex align-items-center">
+                        <h6 class="mb-0">Data de nascimento:</h6>
+                      </div>
+                      <div class="col-sm-9 text-secondary">
+                        {{birthDateFormatted}}
+                      </div>
                     </div>
-                    <div class="col-sm-9 text-secondary">
-                      {{birthDateFormatted}}
-                    </div>
-                  </div>
                   <hr>
+                  {{/if}}
                   <div class="row">
                     <div class="col-sm-3">
                       <h6 class="mb-0">Série</h6>
@@ -83,52 +87,84 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-8">
+              <div class="col-md-12 d-flex justify-content-between align-items-center">
                 <h4>Pais cadastrados na plataforma:</h4>
-                <a class="ms-5" href="/new/parent?studentId={{student._id}}">
-                  <button class="btn btn-primary">Adicionar pai
-                  </button>
-                </a>
+                <button type="button" class="btn btn-primary ms-5 mb-2" data-bs-toggle="modal" data-bs-target="#addParent">Adicionar pai</button>
               </div>
-              <div class="row gutters-sm">
-                {{#each parents}}
-                  <div class="col-sm-6 mb-3">
-                    <div class="card h-100">
-                      <div class="card-body">
-                        <a href="/parents/{{this._id}}" class="d-flex align-items-center mb-3">
-                          <img class="rounded-circle" width="90" src="{{this.profilePicture}}" alt="Avatar">
-                          <h5 class="ms-3">{{this.firstName}} {{this.lastName}}
-                          </h5>
-                        </a>
-                        <div class="row">
-                          <div class="col-sm-3 d-flex align-items-center">
-                            <h6 class="mb-0">Email
-                              </h6>
+              {{#if parents}}
+                <div class="row gutters-sm">
+                  {{#each parents}}
+                    <div class="col-sm-6 mb-3">
+                      <div class="card h-100">
+                        <div class="card-body">
+                          <a href="/parents/{{this._id}}" class="d-flex align-items-center mb-3">
+                            <img class="rounded-circle" width="90" src="{{this.profilePicture}}" alt="Avatar">
+                            <h5 class="ms-3">{{this.firstName}} {{this.lastName}}
+                            </h5>
+                          </a>
+                          <div class="row">
+                            <div class="col-sm-3 d-flex align-items-center">
+                              <h6 class="mb-0">Email
+                                </h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                              {{this.email}}
+                            </div>
                           </div>
-                          <div class="col-sm-9 text-secondary">
-                            {{this.email}}
-                          </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                          <div class="col-sm-3 d-flex align-items-center">
-                            <h6 class="mb-0">Gênero
-                              </h6>
-                          </div>
-                          <div class="col-sm-9 text-secondary">
-                            {{this.gender}}
+                          <hr>
+                          <div class="row">
+                            <div class="col-sm-3 d-flex align-items-center">
+                              <h6 class="mb-0">Gênero
+                                </h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                              {{this.gender}}
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                {{/each}}
-              </div>
+                  {{/each}}
+                </div>
+              {{else}}
+                <small>Até o momento não há nenhum pai cadastrado.</small>
+              {{/if}}
             </div>
           </div>
         </div>
     </div>
 
+
+{{!-- New Parent Modal --}}
+
+<div class="modal fade" id="addParent" tabindex="-1" aria-labelledby="addParentLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addParentLabel">Adicionar pai de {{student.firstName}} {{student.lastName}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/students/{{student._id}}/parent" method="post">
+        <div class="modal-body">
+          <div class="mb-3" id="studentParentInput">
+            <label for="studentParent" class="form-label">Escolha entre os pais já cadastrados:</label>
+            <select class="form-select" name="studentParent">
+              {{#each parentsList}}
+                <option value={{this._id}}>{{this.firstName}} {{this.lastName}}</option>
+              {{/each}}
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-secondary">Salvar relação pai/filho</button>
+          <a href="/new/parent?studentId={{student._id}}"><button type="button" class="btn btn-primary">Criar novo pai</button></a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{{!-- Edit Modal --}}
 <div class="modal fade" id="editStudent" tabindex="-1" aria-labelledby="editStudentLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -136,7 +172,7 @@
         <h5 class="modal-title" id="editStudentLabel">Editar conta de {{student.firstName}} {{student.lastName}}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="/students/{{student._id}}/edit" method="post" enctype="multipart/form-data">
+      <form action="/students/{{student._id}}/edit" method="post">
         <div class="modal-body">
           <div class="row g-3">
             <div class="col-md-6">
@@ -178,6 +214,7 @@
   </div>
 </div>
 
+{{!-- Deletion Modal --}}
   <div class="modal fade" id="deleteStudent" tabindex="-1" aria-labelledby="deleteStudentLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -198,6 +235,8 @@
   </div>
 </div>
 
+
+{{!-- DOM Manipulation --}}
 <script>
   document.querySelector('.activation-toggle').addEventListener('click', () => {
   const activationCheck = document.querySelector('.activation-toggle');

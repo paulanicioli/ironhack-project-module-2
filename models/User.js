@@ -46,6 +46,7 @@ const userSchema = new Schema(
       type: String,
       enum: ['male', 'female', 'non-binary'],
     },
+    requires_approval: { type: Boolean, default: false },
   },
   {
     timestamps: true,

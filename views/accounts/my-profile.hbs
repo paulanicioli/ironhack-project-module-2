@@ -107,7 +107,7 @@
                         </div>
                       </div>
                     {{/if}}
-                    <div class="d-flex justify-content-between mt-2">
+                    <div class="d-flex justify-content-between align-items-center mt-2">
                       <div class="form-check form-switch">
                         <input class="form-check-input newsletter-toggle" type="checkbox" name="userNewsletter" 
                           {{#if currentUser.newsletterOptIn}}
@@ -168,9 +168,9 @@
                 <div class="col-md-8">
                   <h4>Filhos cadastrados na plataforma:</h4>
                 </div>
-                {{#if children}}
+                {{#if currentUser.children}}
                   <div class="row gutters-sm">
-                    {{#each children}}
+                    {{#each currentUser.children}}
                       <div class="col-sm-6 mb-3">
                         <div class="card h-100">
                           <div class="card-body">

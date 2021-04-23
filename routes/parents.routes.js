@@ -2,7 +2,7 @@ const express = require('express');
 const { format } = require('date-format-parse');
 
 require('dotenv').config();
-const { gradesValues } = require('../public/javascripts/dataComponents');
+const { orderedGradesValues } = require('../public/javascripts/dataComponents');
 
 const router = express();
 
@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
     .then((parents) => {
       res.render('./parents/parents', {
         parents,
-        gradesValues,
+        gradesValues: orderedGradesValues,
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
       });
@@ -43,21 +43,33 @@ router.post('/', (req, res) => {
     });
 });
 
-router.get('/:parentId', async (req, res) => {
+router.get('/:parentId', (req, res) => {
   const { parentId } = req.params;
-  await User.findOne({ _id: parentId, role: 'parent' })
+  User.findOne({ _id: parentId, role: 'parent' })
     .populate('children')
     .then((parentFromDatabase) => {
-      let birthDateFormatted = '1900-01-01';
+      let birthDateFormatted;
       if (parentFromDatabase.birthDate) {
         birthDateFormatted = format(parentFromDatabase.birthDate, 'YYYY-MM-DD');
       }
-      res.render('./parents/parentDetail', {
-        parent: parentFromDatabase,
-        birthDateFormatted,
-        currentUser: req.session.currentUser,
-        isTeacher: req.session.currentUser.role === 'teacher',
-      });
+      User.find({
+        role: 'student',
+        active: true,
+        requires_approval: { $ne: true },
+      })
+        .sort({ grade: 1, firstName: 1 })
+        .then((studentsList) => {
+          res.render('./parents/parentDetail', {
+            parent: parentFromDatabase,
+            birthDateFormatted,
+            studentsList,
+            currentUser: req.session.currentUser,
+            isTeacher: req.session.currentUser.role === 'teacher',
+          });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     })
     .catch(() => {
       res.render('not-found', {
@@ -67,41 +79,33 @@ router.get('/:parentId', async (req, res) => {
     });
 });
 
-router.post(
-  '/:parentId/edit',
-  fileUploader.single('parentImage'),
-  (req, res) => {
-    const { parentId } = req.params;
-    const {
-      parentFirstName,
-      parentLastName,
-      parentEmail,
-      parentBirthDate,
-    } = req.body;
+router.post('/:parentId/edit', (req, res) => {
+  const { parentId } = req.params;
+  const {
+    parentFirstName,
+    parentLastName,
+    parentEmail,
+    parentBirthDate,
+  } = req.body;
 
-    const editedParent = {
-      firstName: parentFirstName,
-      lastName: parentLastName,
-      email: parentEmail,
-      birthDate: parentBirthDate,
-    };
+  const editedParent = {
+    firstName: parentFirstName,
+    lastName: parentLastName,
+    email: parentEmail,
+    birthDate: parentBirthDate,
+  };
 
-    if (req.file) {
-      editedParent.profilePicture = req.file.path;
-    }
-
-    User.findOneAndUpdate({ _id: parentId, role: 'parent' }, editedParent)
-      .then((parentFromDatabase) => {
-        res.redirect('/parents/' + parentId);
-      })
-      .catch(() => {
-        res.render('not-found', {
-          currentUser: req.session.currentUser,
-          isTeacher: req.session.currentUser.role === 'teacher',
-        });
+  User.findOneAndUpdate({ _id: parentId, role: 'parent' }, editedParent)
+    .then((parentFromDatabase) => {
+      res.redirect('/parents/' + parentId);
+    })
+    .catch(() => {
+      res.render('not-found', {
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
       });
-  }
-);
+    });
+});
 
 router.post('/:parentId/delete', (req, res) => {
   const { parentId } = req.params;
@@ -109,6 +113,25 @@ router.post('/:parentId/delete', (req, res) => {
   User.findOneAndDelete({ _id: parentId, role: 'parent' })
     .then(() => {
       res.redirect('/parents/');
+    })
+    .catch(() => {
+      res.render('not-found', {
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
+      });
+    });
+});
+
+router.post('/:parentId/child', (req, res) => {
+  const { parentId } = req.params;
+  const { parentChild } = req.body;
+
+  User.findOneAndUpdate(
+    { _id: parentId, role: 'parent' },
+    { $push: { children: parentChild } }
+  )
+    .then(() => {
+      res.redirect('/parents/' + parentId);
     })
     .catch(() => {
       res.render('not-found', {

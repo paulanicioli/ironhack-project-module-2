@@ -31,8 +31,25 @@ const validateSignup = (firstName, lastName, email, password) => {
   return errorsObj;
 };
 
+const validatePasswords = (currentPassword, newPassword) => {
+  const errorsObj = {};
+
+  const currentPasswordError = passwordValidation(currentPassword);
+  if (currentPasswordError.length > 0) {
+    errorsObj.currentPasswordError = currentPasswordError[0];
+  }
+
+  const newPasswordError = passwordValidation(newPassword);
+  if (newPasswordError.length > 0) {
+    errorsObj.newPasswordError = newPasswordError[0];
+  }
+
+  return errorsObj;
+};
+
 module.exports = {
   validateSignup,
+  validatePasswords,
 };
 
 // const userBirthDateErrors = dateValidation(birthDate);

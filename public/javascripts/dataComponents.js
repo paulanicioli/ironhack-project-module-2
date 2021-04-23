@@ -1,5 +1,5 @@
 const variables = {
-  gradesValues: [
+  orderedGradesValues: [
     { value: '1EF', text: '1° ano do Ensino Fundamental', order: 1 },
     { value: '2EF', text: '2° ano do Ensino Fundamental', order: 2 },
     { value: '3EF', text: '3° ano do Ensino Fundamental', order: 3 },
@@ -13,7 +13,7 @@ const variables = {
     { value: '2EM', text: '2° ano do Ensino Médio', order: 11 },
     { value: '3EM', text: '3° ano do Ensino Médio', order: 12 },
   ],
-  genderValues: [
+  orderedGenderValues: [
     { value: 'female', text: 'Feminino' },
     { value: 'male', text: 'Masculino' },
     { value: 'non-binary', text: 'Não binário' },

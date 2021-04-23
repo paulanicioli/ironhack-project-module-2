@@ -3,17 +3,22 @@ const { format } = require('date-format-parse');
 
 const router = express();
 
+const nodemailer = require('nodemailer');
+
 const mongoose = require('mongoose');
 
 const User = require('../models/User');
 
 const bcrypt = require('bcrypt');
 
-const { validateSignup } = require('../validation/validations');
+const {
+  validateSignup,
+  validatePasswords,
+} = require('../validation/validations');
 
 const {
-  gradesValues,
-  genderValues,
+  orderedGradesValues,
+  orderedGenderValues,
 } = require('../public/javascripts/dataComponents');
 
 const fileUploader = require('../config/cloudinary.config');
@@ -27,7 +32,11 @@ router.post('/login', async (req, res) => {
     const { userEmail, userPassword } = req.body;
 
     // verificação dos campos
-    const userFromDb = await User.findOne({ email: userEmail, active: true });
+    const userFromDb = await User.findOne({
+      email: userEmail,
+      active: true,
+      requires_approval: { $ne: true },
+    });
 
     if (!userFromDb) {
       console.log('Could not find user in db');
@@ -76,7 +85,7 @@ router.get('/logout', (req, res) => {
 
 router.get('/request-account', (req, res) => {
   res.render('.accounts/request', {
-    gradesValues,
+    gradesValues: orderedGradesValues,
   });
 });
 
@@ -102,7 +111,7 @@ router.post('/request-account', async (req, res) => {
       requestUserLastName,
       requestUserEmail,
       requestUserType,
-      gradesValues,
+      gradesValues: orderedGradesValues,
     });
   }
 
@@ -117,7 +126,7 @@ router.post('/request-account', async (req, res) => {
         requestUserFirstName,
         requestUserLastName,
         requestUserEmail,
-        gradesValues,
+        gradesValues: orderedGradesValues,
       });
     }
     const newRequestUser = {
@@ -129,6 +138,7 @@ router.post('/request-account', async (req, res) => {
       role: requestUserType,
       first_login: true,
       active: false,
+      requires_approval: true,
     };
 
     await User.create(newRequestUser)
@@ -259,10 +269,11 @@ router.post(
   }
 );
 
-router.get('/my-profile/', (req, res) => {
+router.get('/my-profile/', async (req, res) => {
   if (!req.session.currentUser) {
     return res.render('login');
   } else {
+    const genderValues = [...orderedGenderValues];
     if (req.session.currentUser.gender) {
       const genderIndex = genderValues.findIndex((element) => {
         return element.value === req.session.currentUser.gender;
@@ -273,8 +284,9 @@ router.get('/my-profile/', (req, res) => {
 
       genderValues.unshift(foundGenderValue);
     }
+    const gradesValues = [...orderedGradesValues];
 
-    if (req.session.currentUser.grade) {
+    if (req.session.currentUser.role === 'student') {
       const gradeIndex = gradesValues.findIndex((element) => {
         return element.value === req.session.currentUser.grade;
       });
@@ -283,6 +295,22 @@ router.get('/my-profile/', (req, res) => {
       gradesValues.splice(gradeIndex, 1);
 
       gradesValues.unshift(foundGradeValue);
+    }
+
+    const parents = await User.find({
+      role: 'parent',
+      children: { $elemMatch: { $eq: req.session.currentUser._id } },
+    });
+
+    if (req.session.currentUser.role === 'parent') {
+      await User.findById(req.session.currentUser._id)
+        .populate('children')
+        .then((parentFromDb) => {
+          req.session.currentUser = parentFromDb;
+        })
+        .catch((e) => {
+          console.log('Error finding parent information ===> ', e);
+        });
     }
 
     const birthDateFormatted = format(
@@ -294,6 +322,7 @@ router.get('/my-profile/', (req, res) => {
       currentUser: req.session.currentUser,
       gradesValues,
       genderValues,
+      parents,
       birthDateFormatted,
       userFirstName: req.session.currentUser.firstName,
       userLastName: req.session.currentUser.lastName,
@@ -325,6 +354,7 @@ router.post('/my-profile', (req, res) => {
   }
 
   if (Object.keys(validationErrors).length > 0) {
+    const genderValues = [...orderedGenderValues];
     if (userGender) {
       const genderIndex = genderValues.findIndex((element) => {
         return element.value === userGender;
@@ -335,7 +365,7 @@ router.post('/my-profile', (req, res) => {
 
       genderValues.unshift(foundGenderValue);
     }
-
+    const gradesValues = [...orderedGradesValues];
     if (userGrade) {
       const gradeIndex = gradesValues.findIndex((element) => {
         return element.value === userGrade;
@@ -384,6 +414,103 @@ router.post('/my-profile', (req, res) => {
     .catch((e) => {
       console.log('There has been an error in the My Profile page ===> ', e);
     });
+});
+
+router.get('/reset-password/', (req, res) => {
+  if (!req.session.currentUser) {
+    return res.render('login');
+  } else {
+    return res.render('./accounts/reset-password', {
+      currentUser: req.session.currentUser,
+    });
+  }
+});
+
+router.post('/reset-password/', async (req, res) => {
+  if (!req.session.currentUser) {
+    return res.render('login');
+  }
+  const { currentPassword, newPassword1, newPassword2 } = req.body;
+
+  console.log(currentPassword);
+
+  const validationErrors = validatePasswords(currentPassword, newPassword1);
+
+  if (Object.keys(validationErrors).length > 0) {
+    return res.render('./accounts/reset-password', {
+      validationErrors,
+      currentUser: req.session.currentUser,
+      isTeacher: req.session.currentUser.role === 'teacher',
+    });
+  }
+
+  if (newPassword1 !== newPassword2) {
+    validationErrors.newPasswordError =
+      'Senhas não são iguais! Tente novamente.';
+    return res.render('./accounts/reset-password', {
+      validationErrors,
+      currentUser: req.session.currentUser,
+      isTeacher: req.session.currentUser.role === 'teacher',
+    });
+  }
+
+  try {
+    const userFromDb = await User.findById(req.session.currentUser._id);
+
+    const isPasswordValid = bcrypt.compareSync(
+      currentPassword,
+      userFromDb.password
+    );
+
+    if (!isPasswordValid) {
+      validationErrors.currentPasswordError =
+        'Senha incorreta! Tente novamente.';
+      return res.render('./accounts/reset-password', {
+        validationErrors,
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
+      });
+    } else {
+      const saltRounds = 10;
+      const salt = bcrypt.genSaltSync(saltRounds);
+      const newEncryptedPassword = bcrypt.hashSync(newPassword1, salt);
+      const editedUser = await User.findByIdAndUpdate(
+        req.session.currentUser._id,
+        {
+          password: newEncryptedPassword,
+        },
+        { new: true }
+      );
+      req.session.currentUser = editedUser;
+      return res.redirect('/my-profile');
+    }
+  } catch (error) {
+    console.log('Error in POST /reset-password ===> ', error);
+  }
+});
+
+router.get('/send-email', async (req, res) => {
+  let testAccount = await nodemailer.createTestAccount();
+
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    secure: false,
+    auth: {
+      user: testAccount.user,
+      pass: testAccount.pass,
+    },
+  });
+
+  let info = await transporter.sendMail({
+    from: '"Fred Foo 👻" <foo@example.com>',
+    to: 'paulanicioli@gmail.com, paulinhanicioli@hotmail.com',
+    subject: 'Hello ✔',
+    text: 'Hello world?',
+    html: '<b>Hello world?</b>',
+  });
+
+  console.log('Message sent: %s', info.messageId);
 });
 
 module.exports = router;

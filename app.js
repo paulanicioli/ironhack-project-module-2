@@ -7,6 +7,7 @@ const studentRoutes = require('./routes/students.routes');
 const parentRoutes = require('./routes/parents.routes');
 const coursesRoutes = require('./routes/courses.routes');
 const careerRoutes = require('./routes/careers.routes');
+const childrenRoutes = require('./routes/children.routes');
 const authRoutes = require('./routes/auth.routes');
 const newRoutes = require('./routes/new.routes');
 
@@ -29,7 +30,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
-hbs.registerPartials(__dirname + '/views/partials');
 
 // ROTAS PÚBLICAS
 
@@ -49,13 +49,18 @@ app.use('/courses', coursesRoutes);
 
 app.use('/careers', careerRoutes);
 
+app.use('/children', childrenRoutes);
+
 // ROTAS PERMITIDAS APENAS PARA PROFESSORES
 
 app.use((req, res, next) => {
   if (req.session.currentUser.role === 'teacher') {
     return next();
   }
-  res.render('not-found', { layout: false });
+  res.render('not-found', {
+    currentUser: req.session.currentUser,
+    isTeacher: req.session.currentUser.role === 'teacher',
+  });
 });
 
 app.use('/students', studentRoutes);

@@ -3,7 +3,7 @@ const { format } = require('date-format-parse');
 
 require('dotenv').config();
 
-const { gradesValues } = require('../public/javascripts/dataComponents');
+const { orderedGradesValues } = require('../public/javascripts/dataComponents');
 
 const router = express();
 
@@ -16,7 +16,7 @@ const fileUploader = require('../config/cloudinary.config');
 router.get('/', (req, res) => {
   const userGrade = req.session.currentUser.grade;
   if (req.session.currentUser.role === 'student') {
-    Course.find({ grade: userGrade })
+    Course.find({ grade: userGrade, active: true })
       .populate('teacher')
       .sort({ name: 1 })
       .then((courses) => {
@@ -27,7 +27,7 @@ router.get('/', (req, res) => {
         res.render('./courses/courses', {
           courses,
           currentUser: req.session.currentUser,
-          gradesValues,
+          gradesValues: orderedGradesValues,
           teachers: uniqueTeachers,
         });
       })
@@ -49,7 +49,7 @@ router.get('/', (req, res) => {
           courses,
           currentUser: req.session.currentUser,
           isTeacher: req.session.currentUser.role === 'teacher',
-          gradesValues,
+          gradesValues: orderedGradesValues,
           teachers: uniqueTeachers,
         });
       })
@@ -109,6 +109,7 @@ router.get('/:courseId', (req, res) => {
   Course.findOne({ _id: courseId })
     .populate('teacher')
     .then((courseFromDatabase) => {
+      const gradesValues = [...orderedGradesValues];
       if (courseFromDatabase.grade) {
         const gradeIndex = gradesValues.findIndex((option) => {
           return option.value === courseFromDatabase.grade;
@@ -119,7 +120,11 @@ router.get('/:courseId', (req, res) => {
 
         gradesValues.unshift(foundGradeValue);
       }
-      User.find({ role: 'teacher', active: true })
+      User.find({
+        role: 'teacher',
+        active: true,
+        requires_approval: { $ne: true },
+      })
         .sort({ firstName: 1 })
         .then((teachers) => {
           if (courseFromDatabase.teacher) {

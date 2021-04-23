@@ -52,7 +52,7 @@
               <textarea rows="3" type="text" class="form-control" name="courseDescription">{{course.description}}</textarea>
             </div>
             <div class="mb-1" id="courseTeacherInput">
-        <label for="courseTeacher" class="form-label">Professor:</label>
+        <label for="courseTeacher">Professor:</label>
         <select class="form-select" name="courseTeacher">
           {{#each teachers}}
             <option value={{this._id}}>{{this.firstName}} {{this.lastName}}</option>
@@ -64,7 +64,7 @@
               <input type="file" class="form-control" name="courseImage">
         </div>
         <div class="mb-1" id="courseGradeInput">
-          <label for="courseGrade" class="form-label">Série do curso:</label>
+          <label for="courseGrade">Série do curso:</label>
           <select class="form-select" name="courseGrade">
             {{#each gradesValues}}
               <option value={{this.value}}>{{this.text}}</option>

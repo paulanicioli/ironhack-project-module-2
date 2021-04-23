@@ -1,6 +1,12 @@
-<h1>Alunos</h1>
+{{#if isParent}}
+    <h1>Meus Filhos</h1>
+{{else}}
+    <h1>Alunos</h1>
+{{/if}}
+
 
 <div class="d-flex justify-content-between">
+{{#if isTeacher}}
     <div class="dropdown">
         <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
             Série: <span>Todas</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter filter-icon" viewBox="0 0 16 16">
@@ -32,7 +38,13 @@
 
 <a href="/new/student"><button class="btn btn-primary">Criar novo aluno</button></a>
 
+{{/if}}
+
+{{#if isTeacher}}
 <form action="/students" method="post">
+{{else}}
+<form action="/children" method="post">
+{{/if}}
     <div class="input-group mb-3">
         <input type="text" class="form-control" name="studentName" placeholder="Nome do aluno">
         <button type="submit" class="btn btn-primary">Buscar Aluno</button>
@@ -48,7 +60,11 @@
             <div class="card-body">
                 <h5 class="card-title">{{this.firstName}} {{this.lastName}}</h5>
                 <p class="card-text reduce-text-size">{{this.grade_text}}</p>
-                <a href="/students/{{this._id}}" class="btn btn-primary">Ver detalhes</a>
+                {{#if isTeacher}}
+                    <a href="/students/{{this._id}}" class="btn btn-primary">Ver detalhes</a>
+                {{else}}
+                    <a href="/children/{{this._id}}" class="btn btn-primary">Ver detalhes</a>
+                {{/if}}
             </div>
         </div>
     {{/each}}

@@ -12,13 +12,15 @@ const bcrypt = require('bcrypt');
 
 const { validateSignup } = require('../validation/validations');
 
-const { gradesValues } = require('../public/javascripts/dataComponents');
+const { orderedGradesValues } = require('../public/javascripts/dataComponents');
 
 const fileUploader = require('../config/cloudinary.config');
 
 router.get('/student', (req, res) => {
+  const { parentId } = req.query;
   res.render('./students/new', {
-    gradesValues,
+    gradesValues: orderedGradesValues,
+    newStudentParent: parentId,
     currentUser: req.session.currentUser,
     isTeacher: req.session.currentUser.role === 'teacher',
   });
@@ -32,7 +34,9 @@ router.post('/student', async (req, res) => {
     newUserPassword,
     newUserGrade,
     newUserActive,
+    newUserParent,
   } = req.body;
+
   const validationErrors = validateSignup(
     newUserFirstName,
     newUserLastName,
@@ -40,6 +44,7 @@ router.post('/student', async (req, res) => {
     newUserPassword
   );
 
+  const gradesValues = [...orderedGradesValues];
   const gradeIndex = gradesValues.findIndex((option) => {
     return option.value === newUserGrade;
   });
@@ -64,6 +69,7 @@ router.post('/student', async (req, res) => {
       newUserFirstName,
       newUserLastName,
       newUserEmail,
+      newUserParent,
       gradesValues,
     });
   }
@@ -99,10 +105,26 @@ router.post('/student', async (req, res) => {
       creator: req.session.currentUser._id,
       first_login: true,
       active: activeCheck,
+    }).then((userFromDb) => {
+      User.findOneAndUpdate(
+        {
+          _id: newUserParent,
+          role: 'parent',
+        },
+        { $push: { children: userFromDb._id } },
+        { new: true }
+      )
+        .then((parentFromDb) => {
+          if (parentFromDb) {
+            return res.redirect('/parents/' + parentFromDb._id);
+          } else {
+            return res.redirect('/students');
+          }
+        })
+        .catch((error) => console.log(error));
     });
-    res.redirect('/students');
   } catch (error) {
-    console.log('Erro na rota /signup ===> ', error);
+    console.log('Erro em POST new/student ===> ', error);
   }
 });
 
@@ -115,6 +137,7 @@ router.get('/parent', (req, res) => {
       });
       const studentsFromDB = [...mongoDbObject];
       let gradeIndex = 0;
+      const gradesValues = [...orderedGradesValues];
       for (let i = 0; i < studentsFromDB.length; i++) {
         gradeIndex = gradesValues.findIndex((option) => {
           return option.value === studentsFromDB[i].grade;
@@ -133,10 +156,7 @@ router.get('/parent', (req, res) => {
       });
     })
     .catch((e) => {
-      console.log(
-        'There has been an error displaying the Parent creation form ===> ',
-        e
-      );
+      console.log('Erro em GET new/parent ===> ', e);
     });
 });
 
@@ -187,13 +207,14 @@ router.post('/parent', async (req, res) => {
         newParentFirstName,
         newParentLastName,
         newParentEmail,
+        newParentStudent,
       });
     }
 
     // Finding child in the database
 
     const child = await User.findOne({
-      _id: mongoose.Types.ObjectId(newParentStudent),
+      _id: newParentStudent,
       role: 'student',
     })
       .then()
@@ -216,10 +237,13 @@ router.post('/parent', async (req, res) => {
       active: activeCheck,
       first_login: true,
     });
-
-    res.redirect('/parents');
+    if (child) {
+      return res.redirect('/students/' + child._id);
+    } else {
+      return res.redirect('/parents');
+    }
   } catch (error) {
-    console.log('Erro na rota /signup ===> ', error);
+    console.log('Erro em POST new/parent ===> ', error);
   }
 });
 
@@ -231,11 +255,11 @@ router.get('/course', (req, res) => {
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
         teachers,
-        gradesValues,
+        gradesValues: orderedGradesValues,
       });
     })
     .catch((e) => {
-      console.log('There has been an error while finding teachers ===> ', e);
+      console.log('Erro em GET new/course ===> ', e);
     });
 });
 
@@ -269,7 +293,7 @@ router.post('/course', fileUploader.single('courseImage'), async (req, res) => {
       currentUser: req.session.currentUser,
       isTeacher: req.session.currentUser.role === 'teacher',
       teachers,
-      gradesValues,
+      gradesValues: orderedGradesValues,
       newCourseName,
       newCourseCode,
       newCourseDescription,
@@ -283,7 +307,7 @@ router.post('/course', fileUploader.single('courseImage'), async (req, res) => {
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
         teachers,
-        gradesValues,
+        gradesValues: orderedGradesValues,
         newCourseName,
         newCourseCode,
         newCourseDescription,
@@ -305,7 +329,7 @@ router.post('/course', fileUploader.single('courseImage'), async (req, res) => {
 
     res.redirect('/courses');
   } catch (error) {
-    console.log('Erro na rota /signup ===> ', error);
+    console.log('Erro em POST new/course ===> ', error);
   }
 });
 
@@ -343,7 +367,7 @@ router.post('/career', fileUploader.single('careerImage'), async (req, res) => {
 
     res.redirect('/careers');
   } catch (error) {
-    console.log('Erro ===> ', error);
+    console.log('Erro em POST new/career ===> ', error);
   }
 });
 
