@@ -57,10 +57,13 @@ router.post('/', (req, res) => {
 
 router.get('/:childId', (req, res) => {
   const { childId } = req.params;
-  const isChild = req.session.currentUser.children.findIndex((element) => {
-    return element._id === childId;
-  });
-  if (isChild < 0) {
+  const nonPopulatedIndex = req.session.currentUser.children.indexOf(childId);
+  const populatedIndex = req.session.currentUser.children.findIndex(
+    (element) => {
+      return element._id === childId;
+    }
+  );
+  if (populatedIndex < 0 && nonPopulatedIndex < 0) {
     return res.render('not-found', {
       currentUser: req.session.currentUser,
       isTeacher: req.session.currentUser.role === 'teacher',

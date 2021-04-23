@@ -53,22 +53,34 @@
 </div>
 
 {{#if students}}
-<div class="item-list">
-    {{#each students}}
-        <div class="card content-card" style="width: 15rem;">
-            <img src="{{this.profilePicture}}" class="card-img-top item-img" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">{{this.firstName}} {{this.lastName}}</h5>
-                <p class="card-text reduce-text-size">{{this.grade_text}}</p>
-                {{#if isTeacher}}
-                    <a href="/students/{{this._id}}" class="btn btn-primary">Ver detalhes</a>
-                {{else}}
-                    <a href="/children/{{this._id}}" class="btn btn-primary">Ver detalhes</a>
-                {{/if}}
-            </div>
+    {{#if isTeacher}}
+        <div class="item-list">
+            {{#each students}}
+                <div class="card content-card" style="width: 15rem;">
+                    <img src="{{this.profilePicture}}" class="card-img-top item-img" alt="Student Picture">
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.firstName}} {{this.lastName}}</h5>
+                        <p class="card-text reduce-text-size">{{this.grade_text}}</p>
+                        <a href="/students/{{this._id}}" class="btn btn-primary">Ver detalhes</a>
+                        {{!-- <a href="/children/{{this._id}}" class="btn btn-primary">Ver detalhes</a> --}}
+                    </div>
+                </div>
+            {{/each}}
         </div>
-    {{/each}}
-</div>
+    {{else}}
+        <div class="item-list">
+            {{#each students}}
+                <div class="card content-card" style="width: 15rem;">
+                    <img src="{{this.profilePicture}}" class="card-img-top item-img" alt="Student Picture">
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.firstName}} {{this.lastName}}</h5>
+                        <p class="card-text reduce-text-size">{{this.grade_text}}</p>
+                        <a href="/children/{{this._id}}" class="btn btn-primary">Ver detalhes</a>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    {{/if}}
 {{else}}
     <h1 class="section-title">Nenhum aluno encontrado. Tente novamente.</h1>
 {{/if}}

@@ -68,6 +68,9 @@ router.post('/login', async (req, res) => {
         case 'student':
           res.redirect('/courses/');
           break;
+        case 'parent':
+          res.redirect('/children');
+          break;
         default:
           res.redirect('/students/');
       }
