@@ -566,7 +566,7 @@ router.post('/forgot-password', async (req, res) => {
 
     let info = await transporter.sendMail({
       from: process.env.SENDER_EMAIL,
-      to: 'paulanicioli@gmail.com',
+      to: process.env.DESTINATION_EMAIL,
       subject: 'Sua nova senha temporária',
       text: 'Este é um email automático da Escola do Futuro.',
       html: bodyHtml,
