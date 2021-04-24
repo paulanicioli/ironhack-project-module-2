@@ -16,13 +16,23 @@ const { orderedGradesValues } = require('../public/javascripts/dataComponents');
 
 const fileUploader = require('../config/cloudinary.config');
 
+const generator = require('generate-password');
+
 router.get('/student', (req, res) => {
   const { parentId } = req.query;
+  const temporaryPassword = generator.generate({
+    length: 12,
+    numbers: true,
+    uppercase: true,
+    strict: true,
+  });
   res.render('./students/new', {
     gradesValues: orderedGradesValues,
     newStudentParent: parentId,
+    newUserPassword: temporaryPassword,
     currentUser: req.session.currentUser,
     isTeacher: req.session.currentUser.role === 'teacher',
+    isParent: req.session.currentUser.role === 'parent',
   });
 });
 
@@ -36,7 +46,7 @@ router.post('/student', async (req, res) => {
     newUserActive,
     newUserParent,
   } = req.body;
-
+  console.log(newUserPassword);
   const validationErrors = validateSignup(
     newUserFirstName,
     newUserLastName,
@@ -70,6 +80,7 @@ router.post('/student', async (req, res) => {
       newUserLastName,
       newUserEmail,
       newUserParent,
+      newUserPassword,
       gradesValues,
     });
   }
@@ -88,6 +99,7 @@ router.post('/student', async (req, res) => {
         newUserLastName,
         newUserEmail,
         newUserParent,
+        newUserPassword,
         gradesValues,
       });
     }
@@ -130,10 +142,17 @@ router.post('/student', async (req, res) => {
 });
 
 router.get('/teacher', (req, res) => {
+  const temporaryPassword = generator.generate({
+    length: 12,
+    numbers: true,
+    uppercase: true,
+    strict: true,
+  });
   res.render('./teachers/new', {
     currentUser: req.session.currentUser,
     isTeacher: req.session.currentUser.role === 'teacher',
     isParent: req.session.currentUser.role === 'parent',
+    newUserPassword: temporaryPassword,
   });
 });
 
@@ -168,6 +187,7 @@ router.post('/teacher', async (req, res) => {
       newUserFirstName,
       newUserLastName,
       newUserEmail,
+      newUserPassword,
     });
   }
 
@@ -185,6 +205,7 @@ router.post('/teacher', async (req, res) => {
         newUserFirstName,
         newUserLastName,
         newUserEmail,
+        newUserPassword,
       });
     }
 
@@ -210,6 +231,12 @@ router.post('/teacher', async (req, res) => {
 });
 
 router.get('/parent', (req, res) => {
+  const temporaryPassword = generator.generate({
+    length: 12,
+    numbers: true,
+    uppercase: true,
+    strict: true,
+  });
   User.find({ role: 'student', active: true })
     .then((students) => {
       const mongoDbObject = [];
@@ -233,7 +260,9 @@ router.get('/parent', (req, res) => {
         currentUser: req.session.currentUser,
         studentId: req.query.studentId,
         isTeacher: req.session.currentUser.role === 'teacher',
+        isParent: req.session.currentUser.role === 'parent',
         students: sortedStudentList,
+        newParentPassword: temporaryPassword,
       });
     })
     .catch((e) => {
@@ -272,6 +301,7 @@ router.post('/parent', async (req, res) => {
       newParentFirstName,
       newParentLastName,
       newParentEmail,
+      newParentPassword,
     });
   }
 
@@ -289,6 +319,7 @@ router.post('/parent', async (req, res) => {
         newParentLastName,
         newParentEmail,
         newParentStudent,
+        newParentPassowrd,
       });
     }
 

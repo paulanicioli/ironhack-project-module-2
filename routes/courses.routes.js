@@ -50,19 +50,54 @@ router.get('/', (req, res) => {
       .populate('teacher')
       .sort({ name: 1 })
       .then((courses) => {
-        const teachers = courses
-          .map((element) => {
-            return element.teacher;
-          })
-          .sort((a, b) => a.firstName.localeCompare(b.firstName));
-        const uniqueTeachers = [...new Set(teachers)];
-        res.render('./courses/courses', {
-          courses,
-          currentUser: req.session.currentUser,
-          isTeacher: req.session.currentUser.role === 'teacher',
-          gradesValues: orderedGradesValues,
-          teachers: uniqueTeachers,
-        });
+        User.find({
+          role: 'teacher',
+          active: true,
+          requires_approval: { $ne: true },
+        })
+          .sort({ firstName: 1 })
+          .then((teachers) => {
+            const teachersFullList = [];
+            teachers.forEach((element) => {
+              teachersFullList.push(element.toJSON());
+            });
+            let selectedTeacherName;
+            const uniqueTeachers = [...teachersFullList];
+            for (let i = 0; i < uniqueTeachers.length; i++) {
+              uniqueTeachers[i].isSelected = uniqueTeachers[i]._id == teacher;
+              if (uniqueTeachers[i].isSelected) {
+                selectedTeacherName = uniqueTeachers[i].firstName;
+              }
+            }
+            const gradesValues = [...orderedGradesValues];
+            let gradeSelectedName;
+            for (let i = 0; i < gradesValues.length; i++) {
+              gradesValues[i].isSelected = gradesValues[i].value === grade;
+              if (gradesValues[i].isSelected) {
+                gradeSelectedName = gradesValues[i].text;
+              }
+            }
+            let statusSelection;
+            let statusName;
+            let isActive;
+            if (typeof active !== 'undefined') {
+              statusSelection = true;
+              statusName = active === 'true' ? 'Ativos' : 'Desativados';
+              isActive = active === 'true' ? true : false;
+            }
+            res.render('./courses/courses', {
+              courses,
+              currentUser: req.session.currentUser,
+              isTeacher: req.session.currentUser.role === 'teacher',
+              gradesValues,
+              teachers: uniqueTeachers,
+              gradeSelection: grade,
+              teacherSelection: selectedTeacherName,
+              statusSelection,
+              statusName,
+              isActive,
+            });
+          });
       })
       .catch((error) => {
         console.log('There has been an error ==> ', error);
@@ -78,6 +113,7 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   const { courseName } = req.body;
   Course.find({ name: new RegExp(courseName, 'i') })
+    .populate('teacher')
     .sort({ name: 1 })
     .then((courses) => {
       return res.render('./courses/courses', {

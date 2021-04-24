@@ -42,12 +42,12 @@
         {{/if}}
       </div>
       <div class="col-md-6">
-        <label for="newUserPassword">Senha:</label>
-        <input type="password" class="form-control
+        <label for="newUserPassword">Senha temporária:</label>
+        <input type="string"  name="newUserPassword" value={{newUserPassword}} class="form-control
           {{#if validationErrors.userPasswordErrors}}
             is-invalid
           {{/if}}
-        " placeholder="********" name="newUserPassword">
+        " readonly>
         {{#if validationErrors.userPasswordErrors}}
           <div class="invalid-feedback">{{validationErrors.userPasswordErrors.[0]}}</div>
         {{/if}}

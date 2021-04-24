@@ -19,6 +19,7 @@ router.get('/', (req, res) => {
         careers,
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
+        isParent: req.session.currentUser.role === 'parent',
       });
     })
     .catch((error) => {
@@ -35,6 +36,7 @@ router.post('/', (req, res) => {
         careers,
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
+        isParent: req.session.currentUser.role === 'parent',
       });
     })
     .catch((error) => {

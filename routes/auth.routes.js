@@ -1,5 +1,6 @@
 const express = require('express');
 const { format } = require('date-format-parse');
+require('dotenv').config();
 
 const router = express();
 
@@ -10,6 +11,8 @@ const mongoose = require('mongoose');
 const User = require('../models/User');
 
 const bcrypt = require('bcrypt');
+
+const generator = require('generate-password');
 
 const {
   validateSignup,
@@ -175,6 +178,7 @@ router.get('/confirm/', (req, res) => {
     res.render('./accounts/confirm', {
       currentUser: req.session.currentUser,
       isTeacher: req.session.currentUser.role === 'teacher',
+      isParent: req.session.currentUser.role === 'parent',
       userFirstName: req.session.currentUser.firstName,
       userLastName: req.session.currentUser.lastName,
       userEmail: req.session.currentUser.email,
@@ -251,10 +255,13 @@ router.post(
           req.session.currentUser = updatedUser;
           switch (req.session.currentUser.role) {
             case 'student':
-              res.redirect('/courses/');
+              return res.redirect('/courses/');
+              break;
+            case 'parent':
+              return res.redirect('/children/');
               break;
             default:
-              res.redirect('/students/');
+              return res.redirect('/students/');
           }
         })
         .catch((e) => {
@@ -438,8 +445,6 @@ router.post('/reset-password/', async (req, res) => {
   }
   const { currentPassword, newPassword1, newPassword2 } = req.body;
 
-  console.log(currentPassword);
-
   const validationErrors = validatePasswords(currentPassword, newPassword1);
 
   if (Object.keys(validationErrors).length > 0) {
@@ -501,28 +506,78 @@ router.post('/reset-password/', async (req, res) => {
   }
 });
 
-router.get('/send-email', async (req, res) => {
-  let testAccount = await nodemailer.createTestAccount();
+router.get('/forgot-password', (req, res) => {
+  if (req.session.currentUser) {
+    return res.redirect('/reset-password');
+  }
+  res.render('./accounts/forgot-password');
+});
 
-  let transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false,
-    auth: {
-      user: testAccount.user,
-      pass: testAccount.pass,
-    },
-  });
+router.post('/forgot-password', async (req, res) => {
+  const { currentEmail } = req.body;
+  try {
+    const userFromDb = await User.findOne({ email: currentEmail });
+    const validationErrors = {};
+    if (!userFromDb) {
+      validationErrors.userEmailError =
+        'Este email não está cadastrado na plataforma! Tente novamente.';
+      return res.render('./accounts/forgot-password', {
+        validationErrors,
+        currentEmail,
+      });
+    }
 
-  let info = await transporter.sendMail({
-    from: '"Fred Foo 👻" <foo@example.com>',
-    to: 'paulanicioli@gmail.com, paulinhanicioli@hotmail.com',
-    subject: 'Hello ✔',
-    text: 'Hello world?',
-    html: '<b>Hello world?</b>',
-  });
+    const temporaryPassword = generator.generate({
+      length: 12,
+      numbers: true,
+    });
 
-  console.log('Message sent: %s', info.messageId);
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const newEncryptedPassword = bcrypt.hashSync(temporaryPassword, salt);
+
+    await User.findByIdAndUpdate(userFromDb._id, {
+      password: newEncryptedPassword,
+    })
+      .then(() => {
+        console.log('Senha alterada com sucesso!');
+      })
+      .catch((e) => {
+        console.log('Não foi possível alterar a senha do usuário', e);
+      });
+    const bodyHtml = `<b>Você solicitou uma nova senha para acessar a Escola do Futuro</b>
+    <p>Email: ${currentEmail}</p>
+    <p>Sua senha temporária é: ${temporaryPassword}</p>
+    <p>Faça login na <a href="https://escola-do-futuro.herokuapp.com/login">Escola do Futuro</a> e altere sua senha.</p>
+    <hr>
+    <small>Esta senha é valida por 48h. Faça uma nova solicitação após este prazo.</small> `;
+
+    const smtpConfig = {
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.SENDER_EMAIL,
+        pass: process.env.SENDER_PASSWORD,
+      },
+    };
+
+    let transporter = nodemailer.createTransport(smtpConfig);
+
+    let info = await transporter.sendMail({
+      from: process.env.SENDER_EMAIL,
+      to: 'paulanicioli@gmail.com',
+      subject: 'Sua nova senha temporária',
+      text: 'Este é um email automático da Escola do Futuro.',
+      html: bodyHtml,
+    });
+
+    return res.redirect('/');
+
+    console.log('Message sent: %s', info.messageId);
+  } catch (error) {
+    console.log('Error in POST /forgot-password ===> ', error);
+  }
 });
 
 module.exports = router;

@@ -14,7 +14,18 @@ const User = require('../models/User');
 const fileUploader = require('../config/cloudinary.config');
 
 router.get('/', (req, res) => {
-  User.find({ role: 'student', requires_approval: { $ne: true } })
+  const { grade, active } = req.query;
+  const searchExpression = {
+    role: 'student',
+    requires_approval: { $ne: true },
+  };
+  if (grade) {
+    searchExpression.grade = grade;
+  }
+  if (active) {
+    searchExpression.active = active;
+  }
+  User.find(searchExpression)
     .sort({ firstName: 1 })
     .then((students) => {
       const newStudentArray = [];
@@ -29,11 +40,32 @@ router.get('/', (req, res) => {
         });
         studentsWithGrade[i].grade_text = orderedGradesValues[gradeIndex].text;
       }
+
+      const gradesValues = [...orderedGradesValues];
+      let gradeSelectedName;
+      for (let i = 0; i < gradesValues.length; i++) {
+        gradesValues[i].isSelected = gradesValues[i].value === grade;
+        if (gradesValues[i].isSelected) {
+          gradeSelectedName = gradesValues[i].text;
+        }
+      }
+      let statusSelection;
+      let statusName;
+      let isActive;
+      if (typeof active !== 'undefined') {
+        statusSelection = true;
+        statusName = active === 'true' ? 'Ativos' : 'Desativados';
+        isActive = active === 'true' ? true : false;
+      }
       res.render('./students/students', {
         students: studentsWithGrade,
-        gradesValues: orderedGradesValues,
+        gradesValues,
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
+        gradeSelection: grade,
+        statusSelection,
+        statusName,
+        isActive,
       });
     })
     .catch((error) => {
