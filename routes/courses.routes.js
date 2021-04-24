@@ -14,6 +14,7 @@ const User = require('../models/User');
 const fileUploader = require('../config/cloudinary.config');
 
 router.get('/', (req, res) => {
+  const { grade, teacher, active } = req.query;
   const userGrade = req.session.currentUser.grade;
   if (req.session.currentUser.role === 'student') {
     Course.find({ grade: userGrade, active: true })
@@ -35,7 +36,17 @@ router.get('/', (req, res) => {
         console.log('There has been an error ==> ', error);
       });
   } else if (req.session.currentUser.role === 'teacher') {
-    Course.find({})
+    const searchExpression = {};
+    if (grade) {
+      searchExpression.grade = grade;
+    }
+    if (teacher) {
+      searchExpression.teacher = teacher;
+    }
+    if (active) {
+      searchExpression.active = active;
+    }
+    Course.find(searchExpression)
       .populate('teacher')
       .sort({ name: 1 })
       .then((courses) => {
@@ -65,12 +76,11 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { grade, teacher, status } = req.query;
   const { courseName } = req.body;
   Course.find({ name: new RegExp(courseName, 'i') })
     .sort({ name: 1 })
     .then((courses) => {
-      res.render('./courses/courses', {
+      return res.render('./courses/courses', {
         courses,
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',

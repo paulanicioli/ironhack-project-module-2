@@ -9,7 +9,7 @@
             </svg>    
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item active" href="/courses>">Todas as séries</a></li>
+            <li><a class="dropdown-item active" href="/courses">Todas as séries</a></li>
             <li><hr class="dropdown-divider"></li>
             {{#each gradesValues}}
                 <li><a class="dropdown-item" href="/courses?grade={{this.value}}">{{this.text}}</a></li>
@@ -79,3 +79,11 @@
 {{else}}
     <h1 class="section-title">Nenhum curso encontrado. Tente novamente.</h1>
 {{/if}}
+
+<script>
+    console.log(document.getElementsByClassName('dropdown-menu')[1]);
+    document.getElementsByClassName('dropdown-menu')[1].addEventListener('click', () => {
+        const dropdownElement = document.getElementsByClassName('dropdown-menu')[1];
+        console.log(dropdownElement);
+    });
+</script>
