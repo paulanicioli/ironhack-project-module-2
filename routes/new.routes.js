@@ -48,7 +48,6 @@ router.post('/student', async (req, res) => {
     newUserActive,
     newUserParent,
   } = req.body;
-  console.log(newUserPassword);
   const validationErrors = validateSignup(
     newUserFirstName,
     newUserLastName,
@@ -121,7 +120,24 @@ router.post('/student', async (req, res) => {
       first_login: true,
       active: activeCheck,
     }).then((userFromDb) => {
-      const bodyHtml = `<b>Bem vindo à Escola do Futuro!</b>
+      User.findOneAndUpdate(
+        {
+          _id: newUserParent,
+          role: 'parent',
+        },
+        { $push: { children: userFromDb._id } },
+        { new: true }
+      )
+        .then((parentFromDb) => {
+          if (parentFromDb) {
+            return res.redirect('/parents/' + parentFromDb._id);
+          } else {
+            return res.redirect('/students');
+          }
+        })
+        .catch((error) => console.log(error));
+    });
+    const bodyHtml = `<b>Bem vindo à Escola do Futuro!</b>
     <p>Seu email para login: ${newUserEmail}</p>
     <p>Sua senha temporária é: ${newUserPassword}</p>
     <p>Faça login na <a href="https://escola-do-futuro.herokuapp.com/login">Escola do Futuro</a> e altere sua senha.</p>
@@ -146,23 +162,6 @@ router.post('/student', async (req, res) => {
       subject: 'Sua conta foi criada na Escola do Futuro',
       text: 'Este é um email automático da Escola do Futuro.',
       html: bodyHtml,
-    });
-      User.findOneAndUpdate(
-        {
-          _id: newUserParent,
-          role: 'parent',
-        },
-        { $push: { children: userFromDb._id } },
-        { new: true }
-      )
-        .then((parentFromDb) => {
-          if (parentFromDb) {
-            return res.redirect('/parents/' + parentFromDb._id);
-          } else {
-            return res.redirect('/students');
-          }
-        })
-        .catch((error) => console.log(error));
     });
   } catch (error) {
     console.log('Erro em POST new/student ===> ', error);
