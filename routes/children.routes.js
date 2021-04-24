@@ -3,6 +3,11 @@ const { format } = require('date-format-parse');
 
 const User = require('../models/User');
 
+const {
+  orderedGradesValues,
+  orderedGenderValues,
+} = require('../public/javascripts/dataComponents');
+
 const router = express();
 
 router.get('/', (req, res) => {
@@ -19,13 +24,26 @@ router.get('/', (req, res) => {
     requires_approval: { $ne: true },
     _id: { $in: req.session.currentUser.children },
   })
+    .sort({ firstName: 1 })
     .then((children) => {
+      const newStudentArray = [];
+      children.forEach((element) => {
+        newStudentArray.push(element.toJSON());
+      });
+      const studentsWithGrade = [...newStudentArray];
+      let gradeIndex = -1;
+      for (let i = 0; i < studentsWithGrade.length; i++) {
+        gradeIndex = orderedGradesValues.findIndex((option) => {
+          return option.value === studentsWithGrade[i].grade;
+        });
+        studentsWithGrade[i].grade_text = orderedGradesValues[gradeIndex].text;
+      }
       res.render('./students/students', {
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
         isStudent: req.session.currentUser.role === 'student',
         isParent: req.session.currentUser.role === 'parent',
-        students: children,
+        students: studentsWithGrade,
       });
     })
     .catch((error) => {

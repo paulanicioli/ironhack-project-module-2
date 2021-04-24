@@ -1,0 +1,31 @@
+<h1>Professores</h1>
+
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+{{#if isTeacher}}
+    <a href="/new/teacher"><button class="btn btn-primary">Criar novo professor</button></a>
+{{/if}}
+
+    <form class="my-auto" action="/teachers" method="post">
+        <div class="input-group">
+            <input type="text" class="form-control" name="teacherName" placeholder="Nome do professor">
+            <button type="submit" class="btn btn-primary">Buscar Professor</button>
+        </div>
+    </form>
+</div>
+
+{{#if teachers}}
+        <div class="item-list">
+            {{#each teachers}}
+                <a href="/teachers/{{this._id}}" class="card content-card text-reset text-decoration-none" style="width: 15rem;">
+                    <img src="{{this.profilePicture}}" class="card-img-top item-img" alt="Teacher Picture">
+                    <div class="card-body p-1" style="height: 70px;">
+                        <h5 class="card-title text-center m-0">{{this.firstName}} {{this.lastName}}</h5>
+                        <p class="card-text text-center reduce-text-size fw-lighter">{{this.email}}</p>
+                    </div>
+                </a>
+            {{/each}}
+        </div>
+{{else}}
+    <h1 class="section-title">Nenhum professor encontrado. Tente novamente.</h1>
+{{/if}}

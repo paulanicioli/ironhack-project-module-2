@@ -94,14 +94,14 @@
               {{#if parents}}
                 <div class="row gutters-sm">
                   {{#each parents}}
-                    <div class="col-sm-6 mb-3">
+                    <a href="/parents/{{this._id}}" class="text-reset text-decoration-none col-sm-6 mb-3">
                       <div class="card h-100">
                         <div class="card-body">
-                          <a href="/parents/{{this._id}}" class="d-flex align-items-center mb-3">
+                          <div class="d-flex align-items-center mb-3 text-decoration-none">
                             <img class="rounded-circle" width="90" src="{{this.profilePicture}}" alt="Avatar">
                             <h5 class="ms-3">{{this.firstName}} {{this.lastName}}
                             </h5>
-                          </a>
+                          </div>
                           <div class="row">
                             <div class="col-sm-3 d-flex align-items-center">
                               <h6 class="mb-0">Email
@@ -123,7 +123,7 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </a>
                   {{/each}}
                 </div>
               {{else}}
@@ -225,6 +225,14 @@
       <form action="/students/{{student._id}}/delete" method="post">
         <div class="modal-body">
         <p>Tem certeza de que deseja remover o aluno {{student.firstName}} {{student.lastName}} do {{student.grade}} da plataforma?</p>
+        {{#if parents}}
+          <p>Ele será removido da conta de seus pais:</p>
+            <ul>
+            {{#each parents}}
+              <li>{{this.firstName}} {{this.lastName}} </li>
+            {{/each}}
+            </ul>
+        {{/if}}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

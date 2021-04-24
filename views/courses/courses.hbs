@@ -1,6 +1,6 @@
 <h1>Matérias</h1>
 
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between align-items-center mb-3">
     {{#if isTeacher}}
     <div class="dropdown">
         <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -45,8 +45,8 @@
     </div>
     <a href="/new/course"><button class="btn btn-primary">Criar nova matéria</button></a>
     {{/if}}
-    <form action="/courses" method="post">
-        <div class="input-group mb-3">
+    <form class="my-auto" action="/courses" method="post">
+        <div class="input-group">
             <input type="text" class="form-control" name="courseName" placeholder="Nome da matéria">
             <button type="submit" class="btn btn-primary">Buscar Matéria</button>
         </div>
@@ -56,33 +56,26 @@
 {{#if courses}}
     <div class="item-list">
         {{#each courses}}
-            <div class="card content-card" style="width: 15rem;">
-                <img src="{{this.image}}" class="card-img-top item-img" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">{{this.name}}</h5>
-                    <p class="card-text">Professor: {{this.teacher.firstName}} {{this.teacher.lastName}}</p>
-                    <p class="card-text">Série: {{this.grade}}</p>
-                    <a href="/courses/{{this._id}}" class="btn btn-primary">Ver detalhes</a>
+            <a href="/courses/{{this._id}}" class="text-decoration-none text-reset">
+                <div class="card content-card" style="width: 15rem;">
+                    <img src="{{this.image}}" class="card-img-top item-img" alt="Course image">
+                    <div class="card-body p-1">
+                        <h5 class="card-title text-center m-0">{{this.name}}</h5>
+                        <p class="card-text text-center reduce-text-size m-0">{{this.code}} - {{this.grade}}</p>
+                        {{#if this.teacher}}
+                            <div class="d-flex flex-row justify-content-around align-items-center">
+                                <small class="my-1">Professor:</small>
+                                <a class="text-decoration-none text-reset" href="/teachers/{{this.teacher._id}}">     
+                                        <img src="{{this.teacher.profilePicture}}" class="avatar mx-auto" alt="Teacher Picture">
+                                        <small class="reduce-text-size fw-lighter">{{this.teacher.firstName}} {{this.teacher.lastName}}</small>
+                                </a>
+                        </div>
+                        {{/if}}
+                    </div>
                 </div>
-            </div>
+            </a>
         {{/each}}
     </div>
-
-    <nav aria-label="...">
-      <ul class="pagination">
-        <li class="page-item disabled">
-          <span class="page-link">Previous</span>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item active" aria-current="page">
-          <span class="page-link">2</span>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#">Next</a>
-        </li>
-      </ul>
-    </nav>
 {{else}}
     <h1 class="section-title">Nenhum curso encontrado. Tente novamente.</h1>
 {{/if}}

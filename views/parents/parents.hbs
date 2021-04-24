@@ -1,5 +1,5 @@
 <h1>Pais</h1>
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between align-items-center mb-3">
     <div class="dropdown">
         <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
              Série: <span>Todas</span> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter filter-icon" viewBox="0 0 16 16">
@@ -17,8 +17,8 @@
     
     <a href="/new/parent"><button class="btn btn-primary">Criar novo pai</button></a>
 
-    <form action="/parents" method="post">
-        <div class="input-group mb-3 w-100">
+    <form class="my-auto" action="/parents" method="post">
+        <div class="input-group w-100">
             <input type="text" class="form-control" name="parentName" placeholder="Nome do pai">
             <button type="submit" class="btn btn-primary">Buscar Pai</button>
         </div>
@@ -29,21 +29,27 @@
 {{#if parents}}
 <div class="item-list">
     {{#each parents}}
-        <div class="card content-card" style="width: 15rem;">
-            <img src="{{this.profilePicture}}" class="card-img-top item-img" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">{{this.firstName}} {{this.lastName}}</h5>
-                <p class="card-text">
+        <a href="/parents/{{this._id}}" class="text-decoration-none text-reset">
+            <div class="card content-card" style="width: 15rem;">
+                <img src="{{this.profilePicture}}" class="card-img-top item-img img-fluid" alt="Parent Picture">
+                <div class="card-body py-1">
+                    <h5 class="card-title text-center">{{this.firstName}} {{this.lastName}}</h5>
                     {{#if this.children}}
-                        Filhos:
-                        {{#each this.children}}
-                            <li>{{this.firstName}} {{this.lastName}} - {{this.grade}}</li>
-                        {{/each}}
+                        <small class="my-1">Filhos:</small>
+                        <div class="d-flex flex-row justify-content-center align-items-center">
+                            {{#each this.children}}
+                                <a class="text-decoration-none text-reset" href="/students/{{this._id}}">     
+                                    <div class="d-flex flex-column ms-3" >
+                                        <img src="{{this.profilePicture}}" class="avatar mx-auto" alt="Child Picture">
+                                        <small class="text-center">{{this.firstName}} - {{this.grade}}</small>
+                                    </div>
+                                </a>
+                            {{/each}}
+                        </div>
                     {{/if}}
-                </p>
-                <a href="/parents/{{this._id}}" class="btn btn-primary">Ver detalhes</a>
+                </div>
             </div>
-        </div>
+        </a>
     {{/each}}
 </div>
 {{else}}

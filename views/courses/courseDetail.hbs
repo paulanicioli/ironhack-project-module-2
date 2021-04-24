@@ -1,22 +1,98 @@
-<h4>{{course.name}}</h4>
-<div class="content-container">
-  <img class="content-img" src="{{course.image}}" alt="{{course.name}} image">
-  <div>
-    <h5>Código: <span>{{course.code}}</span></h5>
-    <h5>Descrição: <span>{{course.description}}</span></h5>
-    <h5>Professor: <span>{{course.teacher.firstName}} {{course.teacher.lastName}}</span></h5>
-    <h5>Email do professor: <span>{{course.teacher.email}}</span></h5>
-    <h5>Série: <span>{{gradesValues.[0].text}}</span></h5>
-  </div>
-</div>
+<div class="container">
+    <div class="main-body">
+          <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-column align-items-center text-center">
+                    <img src={{course.image}} alt="Admin" width="250">
+                    <div class="mt-3">
+                      <h4>{{course.name}}</h4>
+                      <p class="text-secondary mb-1">{{course.grade}}</p>
+                      {{#if isTeacher}}
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editCourse">Editar</button>
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#deleteCourse">Deletar</button>
+                      {{/if}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-3 d-flex align-items-center">
+                      <h6 class="mb-0">Código da matéria</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{course.code}}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3 d-flex align-items-center">
+                      <h6 class="mb-0">Série</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{course.grade}}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row d-flex align-items-center">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Descrição</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{course.description}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 d-flex justify-content-between align-items-center">
+                <h4>Professor cadastrado na plataforma:</h4>
+              </div>
+              {{#if course.teacher}}
+                <a href="/teachers/{{course.teacher._id}}" class="col-md-8 text-reset text-decoration-none">
+                  <div class="card mb-3">
+                        <div class="card-body">
+                          <div class="d-flex align-items-center mb-3">
+                            <img class="rounded-circle" width="90" src="{{course.teacher.profilePicture}}" alt="Avatar">
+                            <h5 class="ms-3">{{course.teacher.firstName}} {{course.teacher.lastName}}
+                            </h5>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-3 d-flex align-items-center">
+                              <h6 class="mb-0">Email
+                                </h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                              {{course.teacher.email}}
+                            </div>
+                          </div>
+                          <hr>
+                          <div class="row">
+                            <div class="col-sm-3 d-flex align-items-center">
+                              <h6 class="mb-0">Gênero
+                                </h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                              {{course.teacher.gender}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                </a>
+              {{else}}
+                <small>Até o momento não há nenhum professor cadastrado.</small>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+    </div>
 
-{{#if isTeacher}}
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editCourse">
-  Editar curso
-</button>
 
-<!-- Modal -->
+<!-- Edit Modal -->
 <div class="modal fade" id="editCourse" tabindex="-1" aria-labelledby="editCourseLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -90,9 +166,7 @@
   </div>
 </div>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteCourse">
-  Deletar curso
-</button>
+{{!-- Delete Modal --}}
 
 <div class="modal fade" id="deleteCourse" tabindex="-1" aria-labelledby="deleteCourseLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -125,6 +199,3 @@
   }
   });
 </script>
-
-
-{{/if}}

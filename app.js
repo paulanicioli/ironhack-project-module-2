@@ -5,6 +5,7 @@ const hbs = require('hbs');
 const homeRoutes = require('./routes/home.routes');
 const studentRoutes = require('./routes/students.routes');
 const parentRoutes = require('./routes/parents.routes');
+const teacherRoutes = require('./routes/teachers.routes');
 const coursesRoutes = require('./routes/courses.routes');
 const careerRoutes = require('./routes/careers.routes');
 const childrenRoutes = require('./routes/children.routes');
@@ -50,6 +51,8 @@ app.use('/courses', coursesRoutes);
 app.use('/careers', careerRoutes);
 
 app.use('/children', childrenRoutes);
+
+app.use('/teachers', teacherRoutes);
 
 // ROTAS PERMITIDAS APENAS PARA PROFESSORES
 

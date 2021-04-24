@@ -128,14 +128,14 @@
                 {{#if parents}}
                   <div class="row gutters-sm">
                     {{#each parents}}
-                      <div class="col-sm-6 mb-3">
+                      <a href="/parents/{{this._id}}" class="text-reset text-decoration-none col-sm-6 mb-3">
                         <div class="card h-100">
                           <div class="card-body">
-                            <a href="/parents/{{this._id}}" class="d-flex align-items-center mb-3">
+                            <div class="d-flex align-items-center mb-3">
                               <img class="rounded-circle" width="90" src="{{this.profilePicture}}"    alt="Avatar">
                               <h5 class="ms-3">{{this.firstName}} {{this.lastName}}
                               </h5>
-                            </a>
+                            </div>
                             <div class="row">
                               <div class="col-sm-3 d-flex align-items-center">
                                 <h6 class="mb-0">Email
@@ -157,7 +157,7 @@
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </a>
                     {{/each}}
                   </div>
                 {{else}}
@@ -171,14 +171,14 @@
                 {{#if currentUser.children}}
                   <div class="row gutters-sm">
                     {{#each currentUser.children}}
-                      <div class="col-sm-6 mb-3">
+                      <a href="/children/{{this._id}}" class="text-reset text-decoration-none col-sm-6 mb-3">
                         <div class="card h-100">
                           <div class="card-body">
-                            <a href="/students/{{this._id}}" class="d-flex align-items-center mb-3">
+                            <div class="d-flex align-items-center mb-3">
                               <img class="rounded-circle" width="90" src="{{this.profilePicture}}"    alt="Avatar">
                               <h5 class="ms-3">{{this.firstName}} {{this.lastName}}
                               </h5>
-                            </a>
+                            </div>
                             <div class="row">
                               <div class="col-sm-3 d-flex align-items-center">
                                 <h6 class="mb-0">Email
@@ -200,7 +200,7 @@
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </a>
                     {{/each}}
                   </div>
                 {{else}}

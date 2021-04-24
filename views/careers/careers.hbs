@@ -1,11 +1,11 @@
 <h1>Carreiras</h1>
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between align-items center mb-3">
     {{#if isTeacher}}
         <a href="/new/career"><button class="btn btn-primary">Criar nova carreira</button></a>
     {{/if}}
 
-    <form action="/careers" method="post">
-        <div class="input-group mb-3">
+    <form class="my-auto" action="/careers" method="post">
+        <div class="input-group">
             <input type="text" class="form-control" name="careerName" placeholder="Nome da carreira">
             <button type="submit" class="btn btn-primary">Buscar Carreira</button>
         </div>
@@ -16,14 +16,15 @@
 {{#if careers}}
 <div class="item-list">
     {{#each careers}}
-        <div class="card content-card" style="width: 15rem;">
-            <img src="{{this.image}}" class="card-img-top item-img" alt="...">
+        <a href="/careers/{{this._id}}" class="card content-card text-reset text-decoration-none" style="width: 15rem;">
+            <img src="{{this.image}}" class="card-img-top item-img" alt="Career image">
             <div class="card-body">
-                <h5 class="card-title">{{this.name}}</h5>
-                <p class="card-text">{{this.description}}</p>
-                <a href="/careers/{{this._id}}" class="btn btn-primary">Ver detalhes</a>
+                <h6 class="card-title text-center">{{this.name}}</h6>
+                <div style="height: 70px;">
+                    <small class="card-text" >{{this.description}}</small>
+                </div>
             </div>
-        </div>
+        </a>
     {{/each}}
 </div>
 {{else}}

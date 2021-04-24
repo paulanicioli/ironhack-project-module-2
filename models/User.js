@@ -10,7 +10,7 @@ const userSchema = new Schema(
     profilePicture: {
       type: String,
       default:
-        'https://res.cloudinary.com/de4qbzjqh/image/upload/v1619089775/escola-do-futuro/female-avatar_zdwbnp.jpg',
+        'https://res.cloudinary.com/de4qbzjqh/image/upload/v1619232825/escola-do-futuro/default-avatar_hef4sh.jpg',
     },
     grade: {
       type: String,

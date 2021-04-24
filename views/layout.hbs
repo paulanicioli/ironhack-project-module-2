@@ -27,25 +27,16 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                 <ul class="navbar-nav me-5 mb-lg-0 d-flex align-items-center">
                     {{#if currentUser}}
-                        {{#if isStudent}}
-                        <li class="nav-item mx-3">
-                            <a class="nav-link" href="/courses">Matérias</a>
-                        </li>
-                        <li class="nav-item mx-3">
-                            <a class="nav-link" href="/careers">Carreiras</a>
-                        </li>
-                        {{/if}}
-                        {{#if isTeacher}}
-                        <li class="nav-item mx-3">
-                            <a class="nav-link" href="/courses">Matérias</a>
-                        </li>
-                        <li class="nav-item mx-3">
-                            <a class="nav-link" href="/careers">Carreiras</a>
-                        </li>
-                        {{/if}}
                         {{#if isParent}}
                         <li class="nav-item mx-3">
                             <a class="nav-link" href="/children">Meus filhos</a>
+                        </li>
+                        {{else}}
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="/courses">Matérias</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="/careers">Carreiras</a>
                         </li>
                         {{/if}}
                         {{#if isTeacher}}
@@ -56,6 +47,9 @@
                                 <a class="nav-link" href="/parents">Pais</a>
                             </li>
                         {{/if}}
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="/teachers">Professores</a>
+                        </li>
                     {{else}}
                         <li class="nav-item mx-3">
                             <a class="nav-link" href="/login">Entrar</a>

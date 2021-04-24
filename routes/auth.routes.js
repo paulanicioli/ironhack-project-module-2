@@ -425,6 +425,9 @@ router.get('/reset-password/', (req, res) => {
   } else {
     return res.render('./accounts/reset-password', {
       currentUser: req.session.currentUser,
+      isTeacher: req.session.currentUser.role === 'teacher',
+      isParent: req.session.currentUser.role === 'parent',
+      isStudent: req.session.currentUser.role === 'student',
     });
   }
 });
@@ -444,6 +447,8 @@ router.post('/reset-password/', async (req, res) => {
       validationErrors,
       currentUser: req.session.currentUser,
       isTeacher: req.session.currentUser.role === 'teacher',
+      isParent: req.session.currentUser.role === 'parent',
+      isStudent: req.session.currentUser.role === 'student',
     });
   }
 
@@ -454,6 +459,8 @@ router.post('/reset-password/', async (req, res) => {
       validationErrors,
       currentUser: req.session.currentUser,
       isTeacher: req.session.currentUser.role === 'teacher',
+      isParent: req.session.currentUser.role === 'parent',
+      isStudent: req.session.currentUser.role === 'student',
     });
   }
 
@@ -472,6 +479,8 @@ router.post('/reset-password/', async (req, res) => {
         validationErrors,
         currentUser: req.session.currentUser,
         isTeacher: req.session.currentUser.role === 'teacher',
+        isParent: req.session.currentUser.role === 'parent',
+        isStudent: req.session.currentUser.role === 'student',
       });
     } else {
       const saltRounds = 10;

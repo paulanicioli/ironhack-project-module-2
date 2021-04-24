@@ -30,6 +30,7 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   const { parentName } = req.body;
   User.find({ role: 'parent', firstName: new RegExp(parentName, 'i') })
+    .populate('children')
     .sort({ name: 1 })
     .then((parents) => {
       res.render('./parents/parents', {

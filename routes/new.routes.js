@@ -87,6 +87,7 @@ router.post('/student', async (req, res) => {
         newUserFirstName,
         newUserLastName,
         newUserEmail,
+        newUserParent,
         gradesValues,
       });
     }
@@ -125,6 +126,86 @@ router.post('/student', async (req, res) => {
     });
   } catch (error) {
     console.log('Erro em POST new/student ===> ', error);
+  }
+});
+
+router.get('/teacher', (req, res) => {
+  res.render('./teachers/new', {
+    currentUser: req.session.currentUser,
+    isTeacher: req.session.currentUser.role === 'teacher',
+    isParent: req.session.currentUser.role === 'parent',
+  });
+});
+
+router.post('/teacher', async (req, res) => {
+  const {
+    newUserFirstName,
+    newUserLastName,
+    newUserEmail,
+    newUserPassword,
+    newUserActive,
+  } = req.body;
+
+  const validationErrors = validateSignup(
+    newUserFirstName,
+    newUserLastName,
+    newUserEmail,
+    newUserPassword
+  );
+
+  let activeCheck = true;
+
+  if (!newUserActive) {
+    activeCheck = false;
+  }
+
+  if (Object.keys(validationErrors).length > 0) {
+    return res.render('./teachers/new', {
+      validationErrors,
+      currentUser: req.session.currentUser,
+      isTeacher: req.session.currentUser.role === 'teacher',
+      isParent: req.session.currentUser.role === 'parent',
+      newUserFirstName,
+      newUserLastName,
+      newUserEmail,
+    });
+  }
+
+  try {
+    const userFromDb = await User.findOne({ email: newUserEmail });
+    if (userFromDb) {
+      validationErrors.userEmailErrors = [
+        'Erro! Este usuário já está cadastrado!',
+      ];
+      return res.render('./teachers/new', {
+        validationErrors,
+        currentUser: req.session.currentUser,
+        isTeacher: req.session.currentUser.role === 'teacher',
+        isParent: req.session.currentUser.role === 'parent',
+        newUserFirstName,
+        newUserLastName,
+        newUserEmail,
+      });
+    }
+
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const encryptedPassword = bcrypt.hashSync(newUserPassword, salt);
+
+    await User.create({
+      firstName: newUserFirstName,
+      lastName: newUserLastName,
+      email: newUserEmail,
+      password: encryptedPassword,
+      role: 'teacher',
+      creator: req.session.currentUser._id,
+      first_login: true,
+      active: activeCheck,
+    }).then((userFromDb) => {
+      return res.redirect('/teachers');
+    });
+  } catch (error) {
+    console.log('Erro em POST new/teacher ===> ', error);
   }
 });
 
