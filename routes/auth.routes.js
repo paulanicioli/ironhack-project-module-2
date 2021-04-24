@@ -149,8 +149,9 @@ router.post('/request-account', async (req, res) => {
 
     await User.create(newRequestUser)
       .then(() => {
-        res.render('./accounts/request-successful', {
+        res.render('./accounts/success', {
           requestUserEmail,
+          isNewAccount: true,
         });
       })
       .catch((e) => {
@@ -579,7 +580,10 @@ router.post('/forgot-password', async (req, res) => {
       html: bodyHtml,
     });
 
-    return res.redirect('/');
+    return res.render('./accounts/success', {
+      currentEmail,
+      isNewAccount: false,
+    });
   } catch (error) {
     console.log('Error in POST /forgot-password ===> ', error);
   }

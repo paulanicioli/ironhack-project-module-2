@@ -29,27 +29,27 @@
 {{#if parents}}
 <div class="item-list">
     {{#each parents}}
-        <a href="/parents/{{this._id}}" class="text-decoration-none text-reset">
-            <div class="card content-card" style="width: 15rem;">
+        <div class="card content-card" style="width: 15rem;">
+            <a href="/parents/{{this._id}}" class="text-decoration-none text-reset">
                 <img src="{{this.profilePicture}}" class="card-img-top item-img img-fluid" alt="Parent Picture">
-                <div class="card-body py-1">
-                    <h5 class="card-title text-center">{{this.firstName}} {{this.lastName}}</h5>
-                    {{#if this.children}}
-                        <small class="my-1">Filhos:</small>
-                        <div class="d-flex flex-row justify-content-center align-items-center">
+            </a>
+            <div class="card-body py-1">
+                <h5 class="card-title text-center">{{this.firstName}} {{this.lastName}}</h5>
+                {{#if this.children}}
+                    <small class="my-1">Filhos:</small>
+                    <div class="d-flex flex-row justify-content-center align-items-center">
                             {{#each this.children}}
-                                <a class="text-decoration-none text-reset" href="/students/{{this._id}}">     
-                                    <div class="d-flex flex-column ms-3" >
-                                        <img src="{{this.profilePicture}}" class="avatar mx-auto" alt="Child Picture">
-                                        <small class="text-center">{{this.firstName}} - {{this.grade}}</small>
-                                    </div>
-                                </a>
+                            <a class="text-decoration-none text-reset" href="/students/{{this._id}}">     
+                                <div class="d-flex flex-column ms-3" >
+                                    <img src="{{this.profilePicture}}" class="avatar mx-auto" alt="Child Picture">
+                                    <small class="text-center">{{this.firstName}} - {{this.grade}}</small>
+                                </div>
+                            </a>
                             {{/each}}
-                        </div>
+                    </div>
                     {{/if}}
-                </div>
             </div>
-        </a>
+        </div>
     {{/each}}
 </div>
 {{else}}
