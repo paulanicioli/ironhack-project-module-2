@@ -56,3 +56,16 @@
   </div>
 </form>
 </div>
+
+{{!-- DOM Manipulation --}}
+<script>
+  document.querySelector('.activation-toggle').addEventListener('click', () => {
+  const activationCheck = document.querySelector('.activation-toggle');
+  if (activationCheck.checked) {
+    activationCheck.parentNode.querySelector('label span').innerHTML = 'ativad';
+  } else {
+    activationCheck.parentNode.querySelector('label span').innerHTML =
+      'desativad';
+  }
+  });
+</script>

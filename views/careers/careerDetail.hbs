@@ -56,8 +56,17 @@
               <input type="text" class="form-control" placeholder="Descrição" name="careerDescription" value="{{career.description}}">
             </div>
             <div class="mb-3">
-              <input type="file" class="form-control" placeholder="Foto do curso" name="careerImage">
+              <label for="courseImage">Imagem:</label>
+              <input type="file" class="form-control" name="careerImage">
             </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input activation-toggle" type="checkbox" name="careerActive" 
+              {{#if career.active}}
+                checked
+              {{/if}}>
+              <label class="form-check-label" for="careerActive">Carreira 
+            <span>{{#if career.active}}{{else}}des{{/if}}ativad</span>a</label>
+      </div>
     </div>
         </div>
         <div class="modal-footer">
