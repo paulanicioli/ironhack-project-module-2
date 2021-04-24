@@ -87,7 +87,7 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/request-account', (req, res) => {
-  res.render('.accounts/request', {
+  res.render('./accounts/request', {
     gradesValues: orderedGradesValues,
   });
 });

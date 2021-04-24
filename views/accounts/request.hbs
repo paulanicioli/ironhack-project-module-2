@@ -1,7 +1,7 @@
 <div class="input-form">
   <h1 class="section-title">Solicite a criação da sua conta:</h1>
 
-  <p>Em breve, o nosso time de suporte vai te enviar as credenciais por email ;)</p>
+  <p class="text-center">Em breve, o nosso time de suporte vai te enviar as credenciais por email ;)</p>
 
   <form action="/request-account" method="post" class="px-4 py-3 needs-validation">
     <div class="row g-3">
@@ -72,3 +72,23 @@
     </div>
   </form>
 </div>
+
+<script>
+  document.getElementById('requestUserType2').addEventListener('change', () => {
+    if (document.getElementById('requestUserType2').checked) {
+      document.getElementById('requestStudentGradeInput').className = 'mb-3 d-none';
+    }
+  });
+
+  document.getElementById('requestUserType3').addEventListener('change', () => {
+    if (document.getElementById('requestUserType3').checked) {
+      document.getElementById('requestStudentGradeInput').className = 'mb-3 d-none';
+    }
+  });
+
+  document.getElementById('requestUserType1').addEventListener('change', () => {
+    if (document.getElementById('requestUserType1').checked) {
+      document.getElementById('requestStudentGradeInput').className = 'mb-3';
+    }
+  });
+</script>

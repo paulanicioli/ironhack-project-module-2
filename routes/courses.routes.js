@@ -65,6 +65,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
+  const { grade, teacher, status } = req.query;
   const { courseName } = req.body;
   Course.find({ name: new RegExp(courseName, 'i') })
     .sort({ name: 1 })
