@@ -525,6 +525,13 @@ router.post('/forgot-password', async (req, res) => {
         validationErrors,
         currentEmail,
       });
+    } else if (!userFromDb.active) {
+      validationErrors.userEmailError =
+        'Seu usuário foi desativado ou tem aprovação pendente! Por favor entre em contato com nosso time de suporte em escoladofuturo.success@gmail.com.';
+      return res.render('./accounts/forgot-password', {
+        validationErrors,
+        currentEmail,
+      });
     }
 
     const temporaryPassword = generator.generate({
@@ -573,8 +580,6 @@ router.post('/forgot-password', async (req, res) => {
     });
 
     return res.redirect('/');
-
-    console.log('Message sent: %s', info.messageId);
   } catch (error) {
     console.log('Error in POST /forgot-password ===> ', error);
   }

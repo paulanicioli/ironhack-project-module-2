@@ -10,6 +10,8 @@ const Career = require('../models/Career');
 
 const bcrypt = require('bcrypt');
 
+const nodemailer = require('nodemailer');
+
 const { validateSignup } = require('../validation/validations');
 
 const { orderedGradesValues } = require('../public/javascripts/dataComponents');
@@ -119,6 +121,32 @@ router.post('/student', async (req, res) => {
       first_login: true,
       active: activeCheck,
     }).then((userFromDb) => {
+      const bodyHtml = `<b>Bem vindo à Escola do Futuro!</b>
+    <p>Seu email para login: ${newUserEmail}</p>
+    <p>Sua senha temporária é: ${newUserPassword}</p>
+    <p>Faça login na <a href="https://escola-do-futuro.herokuapp.com/login">Escola do Futuro</a> e altere sua senha.</p>
+    <hr>
+    <small>Esta senha é valida por 48h. Faça uma nova solicitação após este prazo.</small> `;
+
+    const smtpConfig = {
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.SENDER_EMAIL,
+        pass: process.env.SENDER_PASSWORD,
+      },
+    };
+
+    let transporter = nodemailer.createTransport(smtpConfig);
+
+    let info = await transporter.sendMail({
+      from: process.env.SENDER_EMAIL,
+      to: process.env.DESTINATION_EMAIL,
+      subject: 'Sua conta foi criada na Escola do Futuro',
+      text: 'Este é um email automático da Escola do Futuro.',
+      html: bodyHtml,
+    });
       User.findOneAndUpdate(
         {
           _id: newUserParent,
