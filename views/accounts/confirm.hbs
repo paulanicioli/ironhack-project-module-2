@@ -10,7 +10,7 @@
           {{#if validationErrors.userFirstNameErrors}}
             is-invalid
           {{/if}}
-        " placeholder="Nome" name="userFirstName" value={{userFirstName}}>
+        " placeholder="Nome" name="userFirstName" value="{{userFirstName}}">
         {{#if validationErrors.userFirstNameErrors}}
            <div class="invalid-feedback">{{validationErrors.userFirstNameErrors.[0]}}</div>
         {{/if}}
@@ -21,7 +21,7 @@
           {{#if validationErrors.userLastNameErrors}}
             is-invalid
           {{/if}}
-        " placeholder="Sobrenome" name="userLastName" value={{userLastName}}>
+        " placeholder="Sobrenome" name="userLastName" value="{{userLastName}}">
         {{#if validationErrors.userLastNameErrors}}
           <div class="invalid-feedback">{{validationErrors.userLastNameErrors.[0]}}</div>
         {{/if}}
